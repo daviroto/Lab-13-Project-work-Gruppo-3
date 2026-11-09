@@ -1,0 +1,41 @@
+{
+  "policy_id": "lab13-gate-v1",
+  "frozen_on": "2026-11-09",
+  "frozen": true,
+  "requirements": {
+    "accuracy": {
+      "description": "L'accuracy della candidata v2 deve essere almeno pari a quella della v1.",
+      "metric": "accuracy",
+      "operator": ">=",
+      "threshold_from": "accuracy_v1",
+      "margin": 0.0,
+      "evaluated_on": "stessi record_id di validation per v1 e v2"
+    },
+    "latency_p95_ms": {
+      "description": "Il p95 locale della candidata non deve superare 120 ms.",
+      "metric": "p95_latency_ms",
+      "operator": "<=",
+      "threshold": 120,
+      "unit": "ms",
+      "scope": "probe locale della candidata, stesso artefatto caricato"
+    },
+    "error_rate": {
+      "description": "L'error rate sulle richieste valide non deve superare 0,01.",
+      "metric": "http_error_rate",
+      "operator": "<=",
+      "threshold": 0.01,
+      "denominator": "richieste valide",
+      "scope": "probe locale della candidata, stesso artefatto caricato"
+    }
+  },
+  "blocked_if": [
+    "una misura richiesta manca",
+    "la misura riguarda un artefatto diverso da quello dichiarato",
+    "la prova non è comparabile con la baseline"
+  ],
+  "notes": [
+    "Le soglie sono fissate prima di osservare i risultati e non vanno modificate dopo.",
+    "Il superamento dell'accuracy non annulla un vincolo operativo violato.",
+    "Il gate registra una decisione e non cambia da solo la versione attiva."
+  ]
+}

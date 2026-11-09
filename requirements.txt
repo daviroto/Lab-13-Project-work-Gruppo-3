@@ -1,0 +1,16 @@
+# Manifest delle dipendenze Python previste dal laboratorio.
+# NON eseguito e NON installato nella fase S1.
+#
+# Le versioni reali saranno annotate (ad esempio con `pip freeze`) quando
+# l'ambiente del laboratorio sarà predisposto e validato. Non aggiungere pin
+# inventati: in questa fase il manifest indica solo i pacchetti previsti.
+
+numpy
+scikit-learn
+mlflow
+fastapi
+pydantic
+httpx
+uvicorn
+
+# Docker è facoltativo e non è un pacchetto Python: non compare qui.

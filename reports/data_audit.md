@@ -1,0 +1,245 @@
+# Audit dati - S1
+
+Generato (UTC): `2026-11-09T10:16:01+00:00`
+
+## Dataset
+
+- Percorso: `dataset (1).csv`
+- Provenienza: copia assegnata nella cartella del progetto
+- SHA-256 dei byte CSV: `afee41161484c561feb59576f464321f3f0453c00acb9752a9173a7755e97c79`
+- Righe: 1000
+- Feature canoniche: 30
+
+## Conteggi per split e classe
+
+| Split | target 0 | target 1 | Totale |
+| --- | ---: | ---: | ---: |
+| train | 463 | 337 | 800 |
+| validation | 116 | 84 | 200 |
+| all | 579 | 421 | 1000 |
+
+## ID delle righe di validation
+
+Totale: 200
+
+```text
+03_ritardi_consegne_0248
+03_ritardi_consegne_0837
+03_ritardi_consegne_0858
+03_ritardi_consegne_0444
+03_ritardi_consegne_0929
+03_ritardi_consegne_0147
+03_ritardi_consegne_0723
+03_ritardi_consegne_0450
+03_ritardi_consegne_0162
+03_ritardi_consegne_0256
+03_ritardi_consegne_0770
+03_ritardi_consegne_0912
+03_ritardi_consegne_0271
+03_ritardi_consegne_0464
+03_ritardi_consegne_0417
+03_ritardi_consegne_0308
+03_ritardi_consegne_0782
+03_ritardi_consegne_0075
+03_ritardi_consegne_0715
+03_ritardi_consegne_0751
+03_ritardi_consegne_0522
+03_ritardi_consegne_0611
+03_ritardi_consegne_0312
+03_ritardi_consegne_0730
+03_ritardi_consegne_0235
+03_ritardi_consegne_0212
+03_ritardi_consegne_0528
+03_ritardi_consegne_0214
+03_ritardi_consegne_0665
+03_ritardi_consegne_0412
+03_ritardi_consegne_0220
+03_ritardi_consegne_0531
+03_ritardi_consegne_0044
+03_ritardi_consegne_0831
+03_ritardi_consegne_0378
+03_ritardi_consegne_0186
+03_ritardi_consegne_0206
+03_ritardi_consegne_0720
+03_ritardi_consegne_0060
+03_ritardi_consegne_0232
+03_ritardi_consegne_0508
+03_ritardi_consegne_0553
+03_ritardi_consegne_0811
+03_ritardi_consegne_0704
+03_ritardi_consegne_0430
+03_ritardi_consegne_0599
+03_ritardi_consegne_0630
+03_ritardi_consegne_0482
+03_ritardi_consegne_0708
+03_ritardi_consegne_0569
+03_ritardi_consegne_0070
+03_ritardi_consegne_0781
+03_ritardi_consegne_0143
+03_ritardi_consegne_0592
+03_ritardi_consegne_0460
+03_ritardi_consegne_0305
+03_ritardi_consegne_0492
+03_ritardi_consegne_0703
+03_ritardi_consegne_0358
+03_ritardi_consegne_0860
+03_ritardi_consegne_0734
+03_ritardi_consegne_0323
+03_ritardi_consegne_0483
+03_ritardi_consegne_0694
+03_ritardi_consegne_0341
+03_ritardi_consegne_0269
+03_ritardi_consegne_0748
+03_ritardi_consegne_0141
+03_ritardi_consegne_0934
+03_ritardi_consegne_0056
+03_ritardi_consegne_0403
+03_ritardi_consegne_0791
+03_ritardi_consegne_0163
+03_ritardi_consegne_0053
+03_ritardi_consegne_0654
+03_ritardi_consegne_0343
+03_ritardi_consegne_0222
+03_ritardi_consegne_0579
+03_ritardi_consegne_0304
+03_ritardi_consegne_0519
+03_ritardi_consegne_0250
+03_ritardi_consegne_0874
+03_ritardi_consegne_0915
+03_ritardi_consegne_0116
+03_ritardi_consegne_0638
+03_ritardi_consegne_0835
+03_ritardi_consegne_0138
+03_ritardi_consegne_0917
+03_ritardi_consegne_0431
+03_ritardi_consegne_0096
+03_ritardi_consegne_0629
+03_ritardi_consegne_0800
+03_ritardi_consegne_0034
+03_ritardi_consegne_0642
+03_ritardi_consegne_0756
+03_ritardi_consegne_0652
+03_ritardi_consegne_0374
+03_ritardi_consegne_0972
+03_ritardi_consegne_0902
+03_ritardi_consegne_0118
+03_ritardi_consegne_0675
+03_ritardi_consegne_0126
+03_ritardi_consegne_0786
+03_ritardi_consegne_0965
+03_ritardi_consegne_0422
+03_ritardi_consegne_0097
+03_ritardi_consegne_0376
+03_ritardi_consegne_0404
+03_ritardi_consegne_0407
+03_ritardi_consegne_0635
+03_ritardi_consegne_0650
+03_ritardi_consegne_0470
+03_ritardi_consegne_0486
+03_ritardi_consegne_0180
+03_ritardi_consegne_0120
+03_ritardi_consegne_0680
+03_ritardi_consegne_0913
+03_ritardi_consegne_0019
+03_ritardi_consegne_0261
+03_ritardi_consegne_0287
+03_ritardi_consegne_0547
+03_ritardi_consegne_0656
+03_ritardi_consegne_0769
+03_ritardi_consegne_0564
+03_ritardi_consegne_0866
+03_ritardi_consegne_0571
+03_ritardi_consegne_0565
+03_ritardi_consegne_0625
+03_ritardi_consegne_0199
+03_ritardi_consegne_0828
+03_ritardi_consegne_0018
+03_ritardi_consegne_0148
+03_ritardi_consegne_0568
+03_ritardi_consegne_0384
+03_ritardi_consegne_0178
+03_ritardi_consegne_0971
+03_ritardi_consegne_0108
+03_ritardi_consegne_0890
+03_ritardi_consegne_0168
+03_ritardi_consegne_0542
+03_ritardi_consegne_0584
+03_ritardi_consegne_0524
+03_ritardi_consegne_0969
+03_ritardi_consegne_0787
+03_ritardi_consegne_0691
+03_ritardi_consegne_0692
+03_ritardi_consegne_0386
+03_ritardi_consegne_0961
+03_ritardi_consegne_0696
+03_ritardi_consegne_0276
+03_ritardi_consegne_0721
+03_ritardi_consegne_0432
+03_ritardi_consegne_0701
+03_ritardi_consegne_0754
+03_ritardi_consegne_0497
+03_ritardi_consegne_0731
+03_ritardi_consegne_0279
+03_ritardi_consegne_0883
+03_ritardi_consegne_0998
+03_ritardi_consegne_0505
+03_ritardi_consegne_0123
+03_ritardi_consegne_0195
+03_ritardi_consegne_0938
+03_ritardi_consegne_0673
+03_ritardi_consegne_0975
+03_ritardi_consegne_0856
+03_ritardi_consegne_0104
+03_ritardi_consegne_0585
+03_ritardi_consegne_0878
+03_ritardi_consegne_0024
+03_ritardi_consegne_0002
+03_ritardi_consegne_0813
+03_ritardi_consegne_0488
+03_ritardi_consegne_0455
+03_ritardi_consegne_0042
+03_ritardi_consegne_0868
+03_ritardi_consegne_0012
+03_ritardi_consegne_0532
+03_ritardi_consegne_0260
+03_ritardi_consegne_0651
+03_ritardi_consegne_0922
+03_ritardi_consegne_0749
+03_ritardi_consegne_0821
+03_ritardi_consegne_0851
+03_ritardi_consegne_0891
+03_ritardi_consegne_0105
+03_ritardi_consegne_0291
+03_ritardi_consegne_0062
+03_ritardi_consegne_0292
+03_ritardi_consegne_0537
+03_ritardi_consegne_0996
+03_ritardi_consegne_0117
+03_ritardi_consegne_0521
+03_ritardi_consegne_0783
+03_ritardi_consegne_0561
+03_ritardi_consegne_0481
+03_ritardi_consegne_0764
+03_ritardi_consegne_0365
+03_ritardi_consegne_0880
+03_ritardi_consegne_0697
+```
+
+## File richieste
+
+- Percorso: `richieste_monitoraggio.csv`
+- Presente: sì
+- SHA-256: `20910d01e7402d6de2c672b8634b8d6b728bb486da7a0950c313cee6f6e493c6`
+- Uso: File operativo per le prove API: non è un dataset di training o valutazione e non deve essere passato al lettore del dataset.
+
+## Controlli superati
+
+- `file_present_and_not_empty`: ok
+- `header_unique_and_complete`: ok
+- `record_ids_present_and_unique`: ok
+- `splits_train_validation`: ok
+- `targets_binary`: ok
+- `features_numeric_and_finite`: ok
+- `expected_counts`: ok
+- `feature_order_canonical`: ok
+
