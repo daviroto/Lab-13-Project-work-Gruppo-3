@@ -89,9 +89,10 @@ Provenienza: generazione sintetica del docente, seed 1303. Ogni soggetto usa gru
 
 La fase S1 è implementata: struttura del progetto, configurazione dei percorsi,
 lettore e validatore del dataset, contratto dei payload, audit dei dati e
-documentazione di obiettivo/metriche/gate. **Non** sono ancora presenti
-training, modello, servizio API, candidata v2, attivazione o rollback. Il gate è
-fissato ma non ancora misurato.
+documentazione di obiettivo/metriche/gate. **Non** sono ancora presenti servizio
+API, candidata v2, attivazione o rollback. Il gate è fissato ma non ancora
+misurato. La fase S2 (training ripetibile, valutazione e baseline v1 tracciata)
+è implementata e descritta nella sezione seguente.
 
 ## Come individuare i file assegnati
 
@@ -140,16 +141,22 @@ docs/
   contratto_inferenza.md    # schema, ordine feature e payload
   obiettivo_metriche_gate.md
 src/lab13/
-  config.py                 # risoluzione percorsi e impostazioni
-  contracts.py              # unica lista canonica + validatore payload
+  config.py                 # risoluzione percorsi, tracking URI e impostazioni
+  contracts.py              # unica lista canonica + validatore payload + ordine classi
   data.py                   # lettore, controlli e fingerprint SHA-256
+  training.py               # pipeline baseline, fit sul train, metriche di validation
+  model_io.py               # versionamento artefatti + caricatore con controlli
+  tracking.py               # run MLflow su store locale
 scripts/
   audit_data.py             # audit S1 e generazione dei report
-tests/                      # test stdlib: contratti, dati, configurazione, gate
-models/                     # predisposta per gli artefatti delle fasi successive
-reports/                    # report di audit generati
+  train_baseline.py         # training S2, valutazione, MLflow e versionamento
+  # S3-S6: nessun script di servizio, candidata, gate misurato, attivazione o drill
+tests/                      # test stdlib: contratti, dati, config, gate, training, artefatti
+models/                     # artefatti versionati: v1/ (S2)
+reports/                    # report di audit S1 e report di valutazione v1
 logs/                       # predisposta per i log delle fasi successive
-requirements.txt            # manifest delle dipendenze previste, senza versioni
+mlruns/                     # store MLflow locale (escluso da .gitignore)
+requirements.txt            # manifest delle dipendenze previste, senza pin
 ```
 
 ## Comandi della fase S1
@@ -246,9 +253,11 @@ alcun superamento del gate.
 
 `requirements.txt` elenca i pacchetti previsti: NumPy, scikit-learn, MLflow,
 FastAPI, Pydantic, HTTPX e Uvicorn. Docker è facoltativo e non è una dipendenza
-Python. Il manifest è volutamente **senza versioni** e non è stato installato in
-S1; le versioni reali andranno annotate quando l'ambiente del laboratorio sarà
-predisposto.
+Python. Il manifest resta **senza pin**: le versioni osservate nell'ambiente
+del laboratorio sono annotate nei commenti del file e nei metadati degli
+artefatti (`python 3.11.9`, `numpy 2.4.6`, `scikit-learn 1.8.0`, `mlflow 3.16.1`,
+`joblib 1.5.3`). L'audit S1 usa solo la libreria standard; il training S2
+richiede NumPy, scikit-learn, joblib e MLflow.
 
 ## Limiti
 
@@ -259,5 +268,164 @@ predisposto.
   percorsi e rieseguire l'audit.
 - La validation non è un test indipendente e lo split non simula una
   validazione temporale.
-- Le fasi successive (training, API, candidata, gate misurato, attivazione e
-  rollback) non sono implementate in questa fase.
+- Le fasi successive (API, candidata, gate misurato, attivazione e rollback) non
+  sono implementate in queste fasi.
+---
+
+# Implementazione del progetto - fase S2
+
+## Stato
+
+S2 è implementata: training ripetibile della baseline, valutazione sulla
+validation distribuita, tracciamento MLflow su store locale, artefatti
+versionati in `models/v1/` e report di valutazione. Non sono implementati: il
+servizio API (S3), la candidata v2 e il gate misurato (S4), le transizioni di
+versione e il drill (S5-S6). **v1 non è dichiarata pronta al deployment.**
+
+## Comandi della fase S2
+
+```powershell
+# Baseline v1: fit sul train, valutazione, run MLflow, artefatti e report
+python scripts/train_baseline.py
+
+# Percorsi espliciti (stessa precedence della fase S1)
+python scripts/train_baseline.py --dataset ".\dataset (1).csv" --tracking-uri ".\mlruns"
+
+# Prova di ripetibilità senza toccare v1: cartelle e store separati
+python scripts/train_baseline.py --version v1 --models-dir ".\prova\models" --report-dir ".\prova\reports" --tracking-uri ".\prova\mlruns"
+
+# Una seconda esecuzione su v1 è bloccata (exit 4); v1 non viene toccata
+python scripts/train_baseline.py
+
+# Test: contratti, dati, configurazione, gate, training, artefatti e caricatore
+python -m unittest discover -s tests -v
+```
+
+Parametri configurabili: `--version`, `--seed`, `--C`, `--solver`, `--max-iter`,
+`--models-dir`, `--report-dir`, `--tracking-uri`, `--experiment`. La baseline è
+`StandardScaler` + `LogisticRegression(C=1.0, solver="liblinear", max_iter=1000,
+random_state=1303)`; il seed è registrato nei metadati e nel run MLflow.
+
+## Cosa fa il training
+
+- legge il CSV con il lettore di S1 (`load_dataset`); le feature restano
+  nell'ordine canonico di `contracts.FEATURE_NAMES` (nessuna lista duplicata);
+- fit di scaler e classificatore **solo** sulle 800 righe `train`; le 200 righe
+  `validation` sono lette per la sola valutazione, mai per fit, tuning o scelta
+  dei parametri;
+- `record_id`, `split` e `target` esclusi da `X`; `richieste_monitoraggio.csv`
+  non entra nel training;
+- calcola accuracy, precision e recall della classe 1 e matrice di confusione
+  con ordine dichiarato `[0, 1]` (righe = reale, colonne = predetto);
+- conserva predizioni e ID di validation in
+  `models/v1/validation_predictions.json` (200 righe `record_id`, `target`,
+  `prediction`), sufficienti per ricostruire il report;
+- serializza la **pipeline completa** (scaler + classificatore), così il serving
+  applicherà la stessa trasformazione;
+- apre il run MLflow **prima** del salvataggio: il run ID entra nei metadati e i
+  file versionati sono loggati come artefatti del run.
+
+## Risultati effettivamente misurati (v1, validation 200 righe)
+
+| Metrica | Valore |
+| --- | ---: |
+| Accuracy | 0.7350 |
+| Precision classe 1 | 0.6742 |
+| Recall classe 1 | 0.7143 |
+
+| | Predetto 0 | Predetto 1 |
+| --- | ---: | ---: |
+| **Reale 0** | 87 (TN) | 29 (FP) |
+| **Reale 1** | 24 (FN) | 60 (TP) |
+
+Run MLflow della v1 prodotta: `64079619c2c947bd83699d0d552b9d78`, esperimento
+`lab13-progetto3-ritardi-consegne`, store locale `mlruns`.
+
+| Risorsa | Riferimento |
+| --- | --- |
+| Dataset | `dataset (1).csv`, SHA-256 `afee41161484c561feb59576f464321f3f0453c00acb9752a9173a7755e97c79` |
+| Artefatto | `models/v1/pipeline.joblib`, SHA-256 `f8aea6264329d4c53d1f87e270c10ef7a3567c739c59c5796ccf116ccb7e1bd7` |
+| Metadati | `models/v1/model_metadata.json` |
+| Predizioni validation | `models/v1/validation_predictions.json` |
+| Report | `reports/v1_valutazione.md` e `reports/v1_valutazione.json` |
+
+Rieseguendo il comando in cartelle nuove l'artefatto produce lo stesso SHA-256 e
+le stesse predizioni: la pipeline è ripetibile a parità di dati e parametri. Il
+run ID cambia perché è un run nuovo, non una ripetizione di v1.
+
+## Contenuto dei metadati
+
+`models/v1/model_metadata.json` riporta: versione e fase, timestamp UTC, stato
+(baseline valutata, non attivata), parametri e seed della pipeline, lista
+ordinata delle 30 feature con la fonte (`contracts.py`), ordine classi e
+significato, fingerprint SHA-256 del CSV con provenienza, conteggi per split e
+classe, politica di training (fit solo su train, validation solo valutazione,
+richieste non usate), ID delle 200 righe di validation, metriche e matrice di
+confusione, run ID / esperimento / tracking URI MLflow, SHA-256 e dimensione
+dell'artefatto, nomi dei file versionati e versioni software disponibili
+(`python 3.11.9`, `numpy 2.4.6`, `scikit-learn 1.8.0`, `mlflow 3.16.1`,
+`joblib 1.5.3`).
+
+## Caricatore con controlli
+
+```python
+from lab13.model_io import load_version
+
+model = load_version(
+    "models/v1",
+    expected_version="v1",
+    expected_dataset_sha256="afee41161484c561feb59576f464321f3f0453c00acb9752a9173a7755e97c79",
+)
+model.pipeline.predict([[...30 valori nell'ordine canonico...]])
+```
+
+Controlli eseguiti prima di restituire il modello, nell'ordine: metadati
+presenti, leggibili e con le chiavi richieste; versione (metadati ↔ cartella ↔
+versione attesa); schema e ordine delle 30 feature (metadati contro la lista
+canonica e `n_features_in_` dell'artefatto); fingerprint del dataset; hash
+SHA-256 dell'artefatto; contratto della pipeline (due passi `scaler`/`classifier`).
+Ogni fallimento solleva `ModelLoadError` con un messaggio che nomina il controllo
+non superato (per esempio `Controllo 'hash dell'artefatto' non superato`).
+
+## Tracciamento MLflow locale
+
+- tracking URI con la stessa precedence dei percorsi: `--tracking-uri` >
+  `LAB13_MLFLOW_TRACKING_URI` > `mlruns` nella radice del progetto;
+- nessuna connessione esterna: store su file locale. MLflow 3.x mette il store
+  su file in *maintenance mode* e richiede l'opt-out
+  `MLFLOW_ALLOW_FILE_STORE=true`, impostato dal progetto (sovrascrivibile
+  dall'ambiente). In alternativa un store locale a database:
+  `--tracking-uri sqlite:///mlflow.db`;
+- loggate nel run: parametri della pipeline, metriche, tag (fingerprint del CSV,
+  split usato, hash e percorso dell'artefatto, stato) e gli artefatti
+  `pipeline.joblib`, `model_metadata.json`, `validation_predictions.json`,
+  `v1_valutazione.json`;
+- UI locale opzionale e non necessaria: `mlflow ui --tracking-uri ./mlruns`.
+
+## Ripetibilità e non-sovrascrittura
+
+- una seconda esecuzione su `v1` termina con errore esplicito (exit 4) senza
+  cancellare o sovrascrivere `models/v1` né i report della versione; la prova si
+  fa con `--models-dir`, `--report-dir` e `--tracking-uri` separati;
+- la versione è rivendicata prima di aprire il run, così un blocco non produce
+  un fit né un run MLflow vuoto;
+- se il tracciamento o la scrittura dei report falliscono dopo il salvataggio,
+  la versione scritta da quell'esecuzione viene rimossa: non resta una versione
+  senza run coerente.
+
+## Limiti di S2
+
+- I dati sono sintetici e didattici: le metriche non misurano spedizioni reali.
+- La validation assegnata non è un test indipendente e non simula una
+  validazione temporale.
+- La baseline è lineare e i parametri sono fissati a priori (seed e solver
+  documentati): nessuna ricerca di iperparametri né ottimizzazione di soglia,
+  per non usare la validation come selezione.
+- La serializzazione dell'artefatto dipende dalle versioni di joblib,
+  scikit-learn e NumPy: le versioni usate sono registrate nei metadati
+  (`environment`); un ambiente con versioni diverse può produrre un hash
+  dell'artefatto diverso. Il caricatore confronta l'hash dei metadati, quindi
+  una rserializzazione in un ambiente diverso va rieseguita in una versione
+  nuova invece di sostituire v1.
+- Il gate di `config/gate.json` non è misurato: in S2 non esistono servizio,
+  p95 ed error rate. Il gate resta congelato.

@@ -1,9 +1,15 @@
 # Manifest delle dipendenze Python previste dal laboratorio.
-# NON eseguito e NON installato nella fase S1.
 #
-# Le versioni reali saranno annotate (ad esempio con `pip freeze`) quando
-# l'ambiente del laboratorio sarà predisposto e validato. Non aggiungere pin
-# inventati: in questa fase il manifest indica solo i pacchetti previsti.
+# Il manifest resta senza pin: le versioni reali osservate nell'ambiente del
+# laboratorio sono annotate qui sotto, misurate con `pip show`/`importlib.metadata`
+# il 2026-11-09, non inventate. L'audit S1 usa solo la libreria standard; il
+# training S2 richiede numpy, scikit-learn, joblib (via scikit-learn) e mlflow.
+#
+# Versioni reali osservate: python 3.11.9, numpy 2.4.6, scikit-learn 1.8.0,
+# mlflow 3.16.1, joblib 1.5.3.
+#
+# MLflow 3.x richiede MLFLOW_ALLOW_FILE_STORE=true per lo store locale su file
+# (impostato da src/lab13/tracking.py) o un URI locale tipo sqlite:///mlflow.db.
 
 numpy
 scikit-learn

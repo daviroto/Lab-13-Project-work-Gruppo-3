@@ -63,6 +63,11 @@ VALIDATION_SPLIT = "validation"
 EXPECTED_SPLITS: tuple[str, ...] = (TRAIN_SPLIT, VALIDATION_SPLIT)
 VALID_TARGETS = frozenset({0, 1})
 
+# Ordine classi dichiarato per la matrice di confusione: righe = reale,
+# colonne = predetto. La classe positiva delle metriche è il ritardo (1).
+CLASS_ORDER: tuple[int, ...] = (0, 1)
+POSITIVE_CLASS = 1
+
 # Controllo di integrità del dataset assegnato. Non è uno split da rigenerare.
 EXPECTED_TOTAL_ROWS = 1000
 EXPECTED_SPLIT_CLASS_COUNTS: dict[str, dict[int, int]] = {

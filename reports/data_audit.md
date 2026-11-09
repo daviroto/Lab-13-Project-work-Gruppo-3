@@ -1,6 +1,6 @@
 # Audit dati - S1
 
-Generato (UTC): `2026-11-09T10:16:01+00:00`
+Generato (UTC): `2026-11-09T11:20:46+00:00`
 
 ## Dataset
 
@@ -242,4 +242,3 @@ Totale: 200
 - `features_numeric_and_finite`: ok
 - `expected_counts`: ok
 - `feature_order_canonical`: ok
-

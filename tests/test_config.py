@@ -15,9 +15,12 @@ if str(PROJECT_ROOT / "src") not in sys.path:
 
 from lab13.config import (  # noqa: E402
     DEFAULT_DATASET_PATH,
+    DEFAULT_MLFLOW_TRACKING_URI,
     DEFAULT_REQUESTS_PATH,
+    MLFLOW_TRACKING_URI_ENV_VAR,
     Settings,
     resolve_input_path,
+    resolve_tracking_uri,
 )
 
 
@@ -133,6 +136,42 @@ class PathResolutionTests(unittest.TestCase):
         warnings = "\n".join(settings.warnings)
         self.assertIn("dataset: percorso predefinito non trovato", warnings)
         self.assertIn("richieste: file non trovato", warnings)
+
+
+class TrackingUriTests(unittest.TestCase):
+    """Il tracking URI MLflow è locale e configurabile con la stessa precedenza."""
+
+    def test_cli_wins(self) -> None:
+        resolved = resolve_tracking_uri(explicit="prova/mlruns")
+        self.assertEqual(resolved.value, "prova/mlruns")
+        self.assertEqual(resolved.origin, "cli")
+        self.assertIn("argomento CLI", resolved.origin_label)
+
+    def test_environment_wins_over_default(self) -> None:
+        with patch.dict(os.environ, {MLFLOW_TRACKING_URI_ENV_VAR: "store/mlruns"}):
+            resolved = resolve_tracking_uri(explicit=None)
+        self.assertEqual(resolved.value, "store/mlruns")
+        self.assertEqual(resolved.origin, "env")
+
+    def test_default_is_the_local_project_store(self) -> None:
+        with patch.dict(os.environ, {}, clear=False):
+            os.environ.pop(MLFLOW_TRACKING_URI_ENV_VAR, None)
+            resolved = resolve_tracking_uri(explicit=None)
+        self.assertEqual(resolved.value, str(DEFAULT_MLFLOW_TRACKING_URI))
+        self.assertEqual(resolved.origin, "default")
+        self.assertEqual(resolved.display, "mlruns")
+        self.assertIn("store locale", resolved.origin_label)
+
+    def test_uri_scheme_is_not_converted_to_a_path(self) -> None:
+        resolved = resolve_tracking_uri(explicit="sqlite:///mlflow.db")
+        self.assertEqual(resolved.value, "sqlite:///mlflow.db")
+        self.assertEqual(resolved.display, "sqlite:///mlflow.db")
+
+    def test_settings_load_applies_cli_over_environment(self) -> None:
+        with patch.dict(os.environ, {MLFLOW_TRACKING_URI_ENV_VAR: "store/mlruns"}):
+            settings = Settings.load(tracking_uri="prova/mlruns")
+        self.assertEqual(settings.tracking_uri.value, "prova/mlruns")
+        self.assertEqual(settings.tracking_uri.origin, "cli")
 
 
 if __name__ == "__main__":

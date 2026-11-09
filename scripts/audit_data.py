@@ -14,7 +14,7 @@ PROJECT_ROOT = Path(__file__).resolve().parents[1]
 if str(PROJECT_ROOT / "src") not in sys.path:
     sys.path.insert(0, str(PROJECT_ROOT / "src"))
 
-from lab13.config import Settings  # noqa: E402
+from lab13.config import Settings, display_path  # noqa: E402
 from lab13.data import (  # noqa: E402
     DatasetValidationError,
     dataset_audit_dict,
@@ -37,22 +37,12 @@ REQUESTS_USAGE_NOTE = (
 )
 
 
-def _display_path(path: str | Path) -> str:
-    """Formatta i percorsi nei report senza pubblicare directory personali."""
-
-    candidate = Path(path)
-    try:
-        return candidate.resolve().relative_to(PROJECT_ROOT).as_posix()
-    except (OSError, ValueError):
-        return f"…/{candidate.name}"
-
-
 def _requests_info(settings: Settings) -> dict[str, Any]:
     item = settings.requests
     exists = item.path.is_file()
     info: dict[str, Any] = {
-        "requests_path": _display_path(item.path),
-        "default_path": _display_path(item.default_path),
+        "requests_path": display_path(item.path),
+        "default_path": display_path(item.default_path),
         "origin": item.origin,
         "origin_label": item.origin_label,
         "exists": exists,
@@ -79,8 +69,8 @@ def _build_report(
         "generated_at_utc": generated_at,
         "dataset": {
             **dataset_report,
-            "dataset_path": _display_path(dataset_report["dataset_path"]),
-            "default_path": _display_path(settings.dataset.default_path),
+            "dataset_path": display_path(dataset_report["dataset_path"]),
+            "default_path": display_path(settings.dataset.default_path),
             "origin": settings.dataset.origin,
             "origin_label": settings.dataset.origin_label,
             "fallback_used": settings.dataset.fallback_used,
