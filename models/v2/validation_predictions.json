@@ -1,0 +1,1009 @@
+{
+  "version": "v2",
+  "class_order": [
+    0,
+    1
+  ],
+  "rows": [
+    {
+      "record_id": "03_ritardi_consegne_0248",
+      "target": 0,
+      "prediction": 0
+    },
+    {
+      "record_id": "03_ritardi_consegne_0837",
+      "target": 1,
+      "prediction": 1
+    },
+    {
+      "record_id": "03_ritardi_consegne_0858",
+      "target": 0,
+      "prediction": 1
+    },
+    {
+      "record_id": "03_ritardi_consegne_0444",
+      "target": 0,
+      "prediction": 0
+    },
+    {
+      "record_id": "03_ritardi_consegne_0929",
+      "target": 1,
+      "prediction": 1
+    },
+    {
+      "record_id": "03_ritardi_consegne_0147",
+      "target": 0,
+      "prediction": 0
+    },
+    {
+      "record_id": "03_ritardi_consegne_0723",
+      "target": 1,
+      "prediction": 0
+    },
+    {
+      "record_id": "03_ritardi_consegne_0450",
+      "target": 0,
+      "prediction": 0
+    },
+    {
+      "record_id": "03_ritardi_consegne_0162",
+      "target": 1,
+      "prediction": 1
+    },
+    {
+      "record_id": "03_ritardi_consegne_0256",
+      "target": 0,
+      "prediction": 1
+    },
+    {
+      "record_id": "03_ritardi_consegne_0770",
+      "target": 0,
+      "prediction": 1
+    },
+    {
+      "record_id": "03_ritardi_consegne_0912",
+      "target": 0,
+      "prediction": 0
+    },
+    {
+      "record_id": "03_ritardi_consegne_0271",
+      "target": 1,
+      "prediction": 0
+    },
+    {
+      "record_id": "03_ritardi_consegne_0464",
+      "target": 0,
+      "prediction": 0
+    },
+    {
+      "record_id": "03_ritardi_consegne_0417",
+      "target": 1,
+      "prediction": 1
+    },
+    {
+      "record_id": "03_ritardi_consegne_0308",
+      "target": 1,
+      "prediction": 1
+    },
+    {
+      "record_id": "03_ritardi_consegne_0782",
+      "target": 0,
+      "prediction": 0
+    },
+    {
+      "record_id": "03_ritardi_consegne_0075",
+      "target": 0,
+      "prediction": 0
+    },
+    {
+      "record_id": "03_ritardi_consegne_0715",
+      "target": 1,
+      "prediction": 1
+    },
+    {
+      "record_id": "03_ritardi_consegne_0751",
+      "target": 0,
+      "prediction": 1
+    },
+    {
+      "record_id": "03_ritardi_consegne_0522",
+      "target": 1,
+      "prediction": 1
+    },
+    {
+      "record_id": "03_ritardi_consegne_0611",
+      "target": 0,
+      "prediction": 0
+    },
+    {
+      "record_id": "03_ritardi_consegne_0312",
+      "target": 0,
+      "prediction": 0
+    },
+    {
+      "record_id": "03_ritardi_consegne_0730",
+      "target": 1,
+      "prediction": 1
+    },
+    {
+      "record_id": "03_ritardi_consegne_0235",
+      "target": 0,
+      "prediction": 1
+    },
+    {
+      "record_id": "03_ritardi_consegne_0212",
+      "target": 0,
+      "prediction": 1
+    },
+    {
+      "record_id": "03_ritardi_consegne_0528",
+      "target": 1,
+      "prediction": 1
+    },
+    {
+      "record_id": "03_ritardi_consegne_0214",
+      "target": 1,
+      "prediction": 1
+    },
+    {
+      "record_id": "03_ritardi_consegne_0665",
+      "target": 0,
+      "prediction": 0
+    },
+    {
+      "record_id": "03_ritardi_consegne_0412",
+      "target": 1,
+      "prediction": 1
+    },
+    {
+      "record_id": "03_ritardi_consegne_0220",
+      "target": 0,
+      "prediction": 1
+    },
+    {
+      "record_id": "03_ritardi_consegne_0531",
+      "target": 0,
+      "prediction": 1
+    },
+    {
+      "record_id": "03_ritardi_consegne_0044",
+      "target": 0,
+      "prediction": 0
+    },
+    {
+      "record_id": "03_ritardi_consegne_0831",
+      "target": 0,
+      "prediction": 0
+    },
+    {
+      "record_id": "03_ritardi_consegne_0378",
+      "target": 1,
+      "prediction": 1
+    },
+    {
+      "record_id": "03_ritardi_consegne_0186",
+      "target": 1,
+      "prediction": 0
+    },
+    {
+      "record_id": "03_ritardi_consegne_0206",
+      "target": 0,
+      "prediction": 1
+    },
+    {
+      "record_id": "03_ritardi_consegne_0720",
+      "target": 0,
+      "prediction": 0
+    },
+    {
+      "record_id": "03_ritardi_consegne_0060",
+      "target": 0,
+      "prediction": 0
+    },
+    {
+      "record_id": "03_ritardi_consegne_0232",
+      "target": 1,
+      "prediction": 0
+    },
+    {
+      "record_id": "03_ritardi_consegne_0508",
+      "target": 0,
+      "prediction": 0
+    },
+    {
+      "record_id": "03_ritardi_consegne_0553",
+      "target": 0,
+      "prediction": 0
+    },
+    {
+      "record_id": "03_ritardi_consegne_0811",
+      "target": 0,
+      "prediction": 1
+    },
+    {
+      "record_id": "03_ritardi_consegne_0704",
+      "target": 1,
+      "prediction": 1
+    },
+    {
+      "record_id": "03_ritardi_consegne_0430",
+      "target": 0,
+      "prediction": 1
+    },
+    {
+      "record_id": "03_ritardi_consegne_0599",
+      "target": 1,
+      "prediction": 1
+    },
+    {
+      "record_id": "03_ritardi_consegne_0630",
+      "target": 0,
+      "prediction": 0
+    },
+    {
+      "record_id": "03_ritardi_consegne_0482",
+      "target": 1,
+      "prediction": 1
+    },
+    {
+      "record_id": "03_ritardi_consegne_0708",
+      "target": 0,
+      "prediction": 0
+    },
+    {
+      "record_id": "03_ritardi_consegne_0569",
+      "target": 1,
+      "prediction": 1
+    },
+    {
+      "record_id": "03_ritardi_consegne_0070",
+      "target": 1,
+      "prediction": 1
+    },
+    {
+      "record_id": "03_ritardi_consegne_0781",
+      "target": 1,
+      "prediction": 1
+    },
+    {
+      "record_id": "03_ritardi_consegne_0143",
+      "target": 0,
+      "prediction": 0
+    },
+    {
+      "record_id": "03_ritardi_consegne_0592",
+      "target": 0,
+      "prediction": 1
+    },
+    {
+      "record_id": "03_ritardi_consegne_0460",
+      "target": 0,
+      "prediction": 0
+    },
+    {
+      "record_id": "03_ritardi_consegne_0305",
+      "target": 0,
+      "prediction": 0
+    },
+    {
+      "record_id": "03_ritardi_consegne_0492",
+      "target": 0,
+      "prediction": 0
+    },
+    {
+      "record_id": "03_ritardi_consegne_0703",
+      "target": 0,
+      "prediction": 1
+    },
+    {
+      "record_id": "03_ritardi_consegne_0358",
+      "target": 1,
+      "prediction": 1
+    },
+    {
+      "record_id": "03_ritardi_consegne_0860",
+      "target": 1,
+      "prediction": 1
+    },
+    {
+      "record_id": "03_ritardi_consegne_0734",
+      "target": 0,
+      "prediction": 1
+    },
+    {
+      "record_id": "03_ritardi_consegne_0323",
+      "target": 0,
+      "prediction": 0
+    },
+    {
+      "record_id": "03_ritardi_consegne_0483",
+      "target": 0,
+      "prediction": 1
+    },
+    {
+      "record_id": "03_ritardi_consegne_0694",
+      "target": 0,
+      "prediction": 0
+    },
+    {
+      "record_id": "03_ritardi_consegne_0341",
+      "target": 0,
+      "prediction": 0
+    },
+    {
+      "record_id": "03_ritardi_consegne_0269",
+      "target": 0,
+      "prediction": 0
+    },
+    {
+      "record_id": "03_ritardi_consegne_0748",
+      "target": 0,
+      "prediction": 1
+    },
+    {
+      "record_id": "03_ritardi_consegne_0141",
+      "target": 0,
+      "prediction": 0
+    },
+    {
+      "record_id": "03_ritardi_consegne_0934",
+      "target": 0,
+      "prediction": 0
+    },
+    {
+      "record_id": "03_ritardi_consegne_0056",
+      "target": 0,
+      "prediction": 0
+    },
+    {
+      "record_id": "03_ritardi_consegne_0403",
+      "target": 1,
+      "prediction": 1
+    },
+    {
+      "record_id": "03_ritardi_consegne_0791",
+      "target": 0,
+      "prediction": 0
+    },
+    {
+      "record_id": "03_ritardi_consegne_0163",
+      "target": 1,
+      "prediction": 0
+    },
+    {
+      "record_id": "03_ritardi_consegne_0053",
+      "target": 1,
+      "prediction": 1
+    },
+    {
+      "record_id": "03_ritardi_consegne_0654",
+      "target": 0,
+      "prediction": 0
+    },
+    {
+      "record_id": "03_ritardi_consegne_0343",
+      "target": 1,
+      "prediction": 1
+    },
+    {
+      "record_id": "03_ritardi_consegne_0222",
+      "target": 0,
+      "prediction": 1
+    },
+    {
+      "record_id": "03_ritardi_consegne_0579",
+      "target": 0,
+      "prediction": 0
+    },
+    {
+      "record_id": "03_ritardi_consegne_0304",
+      "target": 1,
+      "prediction": 1
+    },
+    {
+      "record_id": "03_ritardi_consegne_0519",
+      "target": 0,
+      "prediction": 0
+    },
+    {
+      "record_id": "03_ritardi_consegne_0250",
+      "target": 1,
+      "prediction": 1
+    },
+    {
+      "record_id": "03_ritardi_consegne_0874",
+      "target": 0,
+      "prediction": 0
+    },
+    {
+      "record_id": "03_ritardi_consegne_0915",
+      "target": 1,
+      "prediction": 1
+    },
+    {
+      "record_id": "03_ritardi_consegne_0116",
+      "target": 0,
+      "prediction": 0
+    },
+    {
+      "record_id": "03_ritardi_consegne_0638",
+      "target": 1,
+      "prediction": 1
+    },
+    {
+      "record_id": "03_ritardi_consegne_0835",
+      "target": 0,
+      "prediction": 0
+    },
+    {
+      "record_id": "03_ritardi_consegne_0138",
+      "target": 1,
+      "prediction": 1
+    },
+    {
+      "record_id": "03_ritardi_consegne_0917",
+      "target": 0,
+      "prediction": 0
+    },
+    {
+      "record_id": "03_ritardi_consegne_0431",
+      "target": 0,
+      "prediction": 0
+    },
+    {
+      "record_id": "03_ritardi_consegne_0096",
+      "target": 0,
+      "prediction": 0
+    },
+    {
+      "record_id": "03_ritardi_consegne_0629",
+      "target": 0,
+      "prediction": 0
+    },
+    {
+      "record_id": "03_ritardi_consegne_0800",
+      "target": 1,
+      "prediction": 0
+    },
+    {
+      "record_id": "03_ritardi_consegne_0034",
+      "target": 0,
+      "prediction": 1
+    },
+    {
+      "record_id": "03_ritardi_consegne_0642",
+      "target": 0,
+      "prediction": 0
+    },
+    {
+      "record_id": "03_ritardi_consegne_0756",
+      "target": 1,
+      "prediction": 0
+    },
+    {
+      "record_id": "03_ritardi_consegne_0652",
+      "target": 0,
+      "prediction": 1
+    },
+    {
+      "record_id": "03_ritardi_consegne_0374",
+      "target": 0,
+      "prediction": 0
+    },
+    {
+      "record_id": "03_ritardi_consegne_0972",
+      "target": 1,
+      "prediction": 1
+    },
+    {
+      "record_id": "03_ritardi_consegne_0902",
+      "target": 1,
+      "prediction": 1
+    },
+    {
+      "record_id": "03_ritardi_consegne_0118",
+      "target": 0,
+      "prediction": 0
+    },
+    {
+      "record_id": "03_ritardi_consegne_0675",
+      "target": 0,
+      "prediction": 0
+    },
+    {
+      "record_id": "03_ritardi_consegne_0126",
+      "target": 0,
+      "prediction": 1
+    },
+    {
+      "record_id": "03_ritardi_consegne_0786",
+      "target": 1,
+      "prediction": 1
+    },
+    {
+      "record_id": "03_ritardi_consegne_0965",
+      "target": 1,
+      "prediction": 1
+    },
+    {
+      "record_id": "03_ritardi_consegne_0422",
+      "target": 0,
+      "prediction": 0
+    },
+    {
+      "record_id": "03_ritardi_consegne_0097",
+      "target": 1,
+      "prediction": 0
+    },
+    {
+      "record_id": "03_ritardi_consegne_0376",
+      "target": 1,
+      "prediction": 1
+    },
+    {
+      "record_id": "03_ritardi_consegne_0404",
+      "target": 1,
+      "prediction": 1
+    },
+    {
+      "record_id": "03_ritardi_consegne_0407",
+      "target": 1,
+      "prediction": 0
+    },
+    {
+      "record_id": "03_ritardi_consegne_0635",
+      "target": 1,
+      "prediction": 1
+    },
+    {
+      "record_id": "03_ritardi_consegne_0650",
+      "target": 0,
+      "prediction": 0
+    },
+    {
+      "record_id": "03_ritardi_consegne_0470",
+      "target": 1,
+      "prediction": 0
+    },
+    {
+      "record_id": "03_ritardi_consegne_0486",
+      "target": 1,
+      "prediction": 0
+    },
+    {
+      "record_id": "03_ritardi_consegne_0180",
+      "target": 0,
+      "prediction": 0
+    },
+    {
+      "record_id": "03_ritardi_consegne_0120",
+      "target": 0,
+      "prediction": 0
+    },
+    {
+      "record_id": "03_ritardi_consegne_0680",
+      "target": 0,
+      "prediction": 0
+    },
+    {
+      "record_id": "03_ritardi_consegne_0913",
+      "target": 0,
+      "prediction": 0
+    },
+    {
+      "record_id": "03_ritardi_consegne_0019",
+      "target": 0,
+      "prediction": 0
+    },
+    {
+      "record_id": "03_ritardi_consegne_0261",
+      "target": 1,
+      "prediction": 1
+    },
+    {
+      "record_id": "03_ritardi_consegne_0287",
+      "target": 0,
+      "prediction": 0
+    },
+    {
+      "record_id": "03_ritardi_consegne_0547",
+      "target": 1,
+      "prediction": 0
+    },
+    {
+      "record_id": "03_ritardi_consegne_0656",
+      "target": 0,
+      "prediction": 0
+    },
+    {
+      "record_id": "03_ritardi_consegne_0769",
+      "target": 0,
+      "prediction": 0
+    },
+    {
+      "record_id": "03_ritardi_consegne_0564",
+      "target": 1,
+      "prediction": 0
+    },
+    {
+      "record_id": "03_ritardi_consegne_0866",
+      "target": 1,
+      "prediction": 1
+    },
+    {
+      "record_id": "03_ritardi_consegne_0571",
+      "target": 0,
+      "prediction": 1
+    },
+    {
+      "record_id": "03_ritardi_consegne_0565",
+      "target": 1,
+      "prediction": 1
+    },
+    {
+      "record_id": "03_ritardi_consegne_0625",
+      "target": 1,
+      "prediction": 0
+    },
+    {
+      "record_id": "03_ritardi_consegne_0199",
+      "target": 1,
+      "prediction": 0
+    },
+    {
+      "record_id": "03_ritardi_consegne_0828",
+      "target": 0,
+      "prediction": 0
+    },
+    {
+      "record_id": "03_ritardi_consegne_0018",
+      "target": 0,
+      "prediction": 0
+    },
+    {
+      "record_id": "03_ritardi_consegne_0148",
+      "target": 0,
+      "prediction": 0
+    },
+    {
+      "record_id": "03_ritardi_consegne_0568",
+      "target": 0,
+      "prediction": 0
+    },
+    {
+      "record_id": "03_ritardi_consegne_0384",
+      "target": 1,
+      "prediction": 1
+    },
+    {
+      "record_id": "03_ritardi_consegne_0178",
+      "target": 0,
+      "prediction": 1
+    },
+    {
+      "record_id": "03_ritardi_consegne_0971",
+      "target": 0,
+      "prediction": 0
+    },
+    {
+      "record_id": "03_ritardi_consegne_0108",
+      "target": 1,
+      "prediction": 1
+    },
+    {
+      "record_id": "03_ritardi_consegne_0890",
+      "target": 1,
+      "prediction": 0
+    },
+    {
+      "record_id": "03_ritardi_consegne_0168",
+      "target": 0,
+      "prediction": 1
+    },
+    {
+      "record_id": "03_ritardi_consegne_0542",
+      "target": 1,
+      "prediction": 1
+    },
+    {
+      "record_id": "03_ritardi_consegne_0584",
+      "target": 1,
+      "prediction": 1
+    },
+    {
+      "record_id": "03_ritardi_consegne_0524",
+      "target": 1,
+      "prediction": 1
+    },
+    {
+      "record_id": "03_ritardi_consegne_0969",
+      "target": 0,
+      "prediction": 0
+    },
+    {
+      "record_id": "03_ritardi_consegne_0787",
+      "target": 0,
+      "prediction": 0
+    },
+    {
+      "record_id": "03_ritardi_consegne_0691",
+      "target": 1,
+      "prediction": 1
+    },
+    {
+      "record_id": "03_ritardi_consegne_0692",
+      "target": 0,
+      "prediction": 0
+    },
+    {
+      "record_id": "03_ritardi_consegne_0386",
+      "target": 0,
+      "prediction": 0
+    },
+    {
+      "record_id": "03_ritardi_consegne_0961",
+      "target": 0,
+      "prediction": 0
+    },
+    {
+      "record_id": "03_ritardi_consegne_0696",
+      "target": 0,
+      "prediction": 0
+    },
+    {
+      "record_id": "03_ritardi_consegne_0276",
+      "target": 0,
+      "prediction": 0
+    },
+    {
+      "record_id": "03_ritardi_consegne_0721",
+      "target": 0,
+      "prediction": 0
+    },
+    {
+      "record_id": "03_ritardi_consegne_0432",
+      "target": 1,
+      "prediction": 1
+    },
+    {
+      "record_id": "03_ritardi_consegne_0701",
+      "target": 0,
+      "prediction": 1
+    },
+    {
+      "record_id": "03_ritardi_consegne_0754",
+      "target": 0,
+      "prediction": 1
+    },
+    {
+      "record_id": "03_ritardi_consegne_0497",
+      "target": 0,
+      "prediction": 0
+    },
+    {
+      "record_id": "03_ritardi_consegne_0731",
+      "target": 0,
+      "prediction": 0
+    },
+    {
+      "record_id": "03_ritardi_consegne_0279",
+      "target": 0,
+      "prediction": 0
+    },
+    {
+      "record_id": "03_ritardi_consegne_0883",
+      "target": 0,
+      "prediction": 0
+    },
+    {
+      "record_id": "03_ritardi_consegne_0998",
+      "target": 1,
+      "prediction": 1
+    },
+    {
+      "record_id": "03_ritardi_consegne_0505",
+      "target": 1,
+      "prediction": 1
+    },
+    {
+      "record_id": "03_ritardi_consegne_0123",
+      "target": 0,
+      "prediction": 0
+    },
+    {
+      "record_id": "03_ritardi_consegne_0195",
+      "target": 0,
+      "prediction": 0
+    },
+    {
+      "record_id": "03_ritardi_consegne_0938",
+      "target": 0,
+      "prediction": 0
+    },
+    {
+      "record_id": "03_ritardi_consegne_0673",
+      "target": 0,
+      "prediction": 0
+    },
+    {
+      "record_id": "03_ritardi_consegne_0975",
+      "target": 1,
+      "prediction": 1
+    },
+    {
+      "record_id": "03_ritardi_consegne_0856",
+      "target": 1,
+      "prediction": 0
+    },
+    {
+      "record_id": "03_ritardi_consegne_0104",
+      "target": 1,
+      "prediction": 0
+    },
+    {
+      "record_id": "03_ritardi_consegne_0585",
+      "target": 1,
+      "prediction": 1
+    },
+    {
+      "record_id": "03_ritardi_consegne_0878",
+      "target": 1,
+      "prediction": 1
+    },
+    {
+      "record_id": "03_ritardi_consegne_0024",
+      "target": 0,
+      "prediction": 0
+    },
+    {
+      "record_id": "03_ritardi_consegne_0002",
+      "target": 1,
+      "prediction": 0
+    },
+    {
+      "record_id": "03_ritardi_consegne_0813",
+      "target": 1,
+      "prediction": 1
+    },
+    {
+      "record_id": "03_ritardi_consegne_0488",
+      "target": 0,
+      "prediction": 0
+    },
+    {
+      "record_id": "03_ritardi_consegne_0455",
+      "target": 1,
+      "prediction": 1
+    },
+    {
+      "record_id": "03_ritardi_consegne_0042",
+      "target": 0,
+      "prediction": 0
+    },
+    {
+      "record_id": "03_ritardi_consegne_0868",
+      "target": 1,
+      "prediction": 0
+    },
+    {
+      "record_id": "03_ritardi_consegne_0012",
+      "target": 1,
+      "prediction": 0
+    },
+    {
+      "record_id": "03_ritardi_consegne_0532",
+      "target": 1,
+      "prediction": 0
+    },
+    {
+      "record_id": "03_ritardi_consegne_0260",
+      "target": 1,
+      "prediction": 1
+    },
+    {
+      "record_id": "03_ritardi_consegne_0651",
+      "target": 0,
+      "prediction": 0
+    },
+    {
+      "record_id": "03_ritardi_consegne_0922",
+      "target": 0,
+      "prediction": 0
+    },
+    {
+      "record_id": "03_ritardi_consegne_0749",
+      "target": 1,
+      "prediction": 1
+    },
+    {
+      "record_id": "03_ritardi_consegne_0821",
+      "target": 1,
+      "prediction": 1
+    },
+    {
+      "record_id": "03_ritardi_consegne_0851",
+      "target": 1,
+      "prediction": 1
+    },
+    {
+      "record_id": "03_ritardi_consegne_0891",
+      "target": 0,
+      "prediction": 0
+    },
+    {
+      "record_id": "03_ritardi_consegne_0105",
+      "target": 0,
+      "prediction": 1
+    },
+    {
+      "record_id": "03_ritardi_consegne_0291",
+      "target": 0,
+      "prediction": 1
+    },
+    {
+      "record_id": "03_ritardi_consegne_0062",
+      "target": 1,
+      "prediction": 1
+    },
+    {
+      "record_id": "03_ritardi_consegne_0292",
+      "target": 0,
+      "prediction": 0
+    },
+    {
+      "record_id": "03_ritardi_consegne_0537",
+      "target": 0,
+      "prediction": 0
+    },
+    {
+      "record_id": "03_ritardi_consegne_0996",
+      "target": 0,
+      "prediction": 1
+    },
+    {
+      "record_id": "03_ritardi_consegne_0117",
+      "target": 1,
+      "prediction": 0
+    },
+    {
+      "record_id": "03_ritardi_consegne_0521",
+      "target": 1,
+      "prediction": 1
+    },
+    {
+      "record_id": "03_ritardi_consegne_0783",
+      "target": 1,
+      "prediction": 1
+    },
+    {
+      "record_id": "03_ritardi_consegne_0561",
+      "target": 1,
+      "prediction": 1
+    },
+    {
+      "record_id": "03_ritardi_consegne_0481",
+      "target": 0,
+      "prediction": 1
+    },
+    {
+      "record_id": "03_ritardi_consegne_0764",
+      "target": 1,
+      "prediction": 0
+    },
+    {
+      "record_id": "03_ritardi_consegne_0365",
+      "target": 0,
+      "prediction": 0
+    },
+    {
+      "record_id": "03_ritardi_consegne_0880",
+      "target": 0,
+      "prediction": 0
+    },
+    {
+      "record_id": "03_ritardi_consegne_0697",
+      "target": 0,
+      "prediction": 0
+    }
+  ]
+}

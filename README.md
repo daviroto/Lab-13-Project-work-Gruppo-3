@@ -413,7 +413,71 @@ non superato (per esempio `Controllo 'hash dell'artefatto' non superato`).
   la versione scritta da quell'esecuzione viene rimossa: non resta una versione
   senza run coerente.
 
-## Limiti di S2
+## S3 - Servizio osservabile
+
+Il servizio è implementato in `src/lab13/service.py`. La configurazione
+`config/active_version.json` punta inizialmente a `v1`; l'app carica la
+cartella corrispondente con `load_version`, verifica schema, fingerprint e hash
+dell'artefatto e riporta versione/run ID del modello realmente caricato. Per
+avviare localmente, dall'ambiente con le dipendenze installate:
+
+```powershell
+uvicorn lab13.service:app --app-dir src --host 127.0.0.1 --port 8000
+```
+
+`POST /predict` accetta soltanto `{"features": [30 numeri finiti]}` in ordine
+canonico. Risponde 422 prima del predict per payload non validi; il request ID
+è accettato tramite `X-Request-ID` oppure generato, e compare nel body/headers
+e nel log JSONL `logs/requests.jsonl`. I log non contengono il payload.
+`GET /health` espone versione, run ID e hash; `GET /metrics` restituisce una
+finestra mobile di 15 minuti sulle sole richieste `POST /predict`, con richieste,
+errori HTTP ≥400, error rate e p95. A zero richieste, error rate è 0 e p95 è
+`null`. Health e metrics non entrano nel conteggio.
+
+## S4 - Candidata v2 e gate
+
+Ipotesi registrata: una regolarizzazione più forte (`C=0.5` contro `C=1.0`)
+può ridurre la sensibilità a rumore delle feature sintetiche e migliorare la
+generalizzazione. È una sola modifica della configurazione della Logistic
+Regression. Lo stesso CSV, gli stessi 800 ID train, i 200 ID validation,
+l'ordine feature e il seed restano invariati; la validation serve solo a
+valutare, senza tuning iterativo.
+
+Il CSV incluso ha SHA-256
+`5c999d24a24126e81a033ae5ecf9b9b1049925f8abe59367883bcd171476c72f`, ma gli
+artefatti v1 distribuiti dichiarano `afee41161484c561feb59576f464321f3f0453c00acb9752a9173a7755e97c79`.
+La differenza viene trattata come una discrepanza della consegna: v1 originale
+rimane intatta e il confronto S4 usa una baseline v1 isolata, ricreata sul CSV
+incluso, senza cambiare i dati o lo split.
+
+```powershell
+python scripts/train_baseline.py --models-dir .\comparison_baseline\models --report-dir .\comparison_baseline\reports --tracking-uri .\comparison_baseline\mlruns
+python scripts/train_candidate.py
+python scripts/probe_service.py
+python scripts/evaluate_gate.py --baseline-report .\comparison_baseline\reports\v1_valutazione.json --baseline-model-dir .\comparison_baseline\models\v1
+```
+
+Il probe esegue 3 warm-up e 30 misure di `pipeline.predict` in-process.
+Per misurare anche il percorso HTTP, avviare il server sulla candidata tramite
+una configurazione temporanea che seleziona `v2` (senza modificare
+`config/active_version.json`) e usare `python scripts/probe_service.py
+--base-url http://127.0.0.1:8000`. Il report separa le due misure: solo il p95
+e l'error rate HTTP sono considerati per il gate operativo. Il gate è quello
+congelato in `config/gate.json`; `reports/gate_s4.md` e `.json` registrano la
+decisione. L'esito non cambia mai la versione attiva.
+
+Per avviare una candidata temporanea:
+
+```powershell
+$env:LAB13_ACTIVE_VERSION_PATH = ".\config\active_version_v2_probe.json"
+'{"version":"v2"}' | Set-Content .\config\active_version_v2_probe.json
+uvicorn lab13.service:app --app-dir src --host 127.0.0.1 --port 8000
+```
+
+La configurazione di prova va rimossa al termine del probe. Non è un drill di
+attivazione/rollback: la configurazione canonica resta v1.
+
+## Limiti di S2-S4
 
 - I dati sono sintetici e didattici: le metriche non misurano spedizioni reali.
 - La validation assegnata non è un test indipendente e non simula una
@@ -427,5 +491,7 @@ non superato (per esempio `Controllo 'hash dell'artefatto' non superato`).
   dell'artefatto diverso. Il caricatore confronta l'hash dei metadati, quindi
   una rserializzazione in un ambiente diverso va rieseguita in una versione
   nuova invece di sostituire v1.
-- Il gate di `config/gate.json` non è misurato: in S2 non esistono servizio,
-  p95 ed error rate. Il gate resta congelato.
+- I risultati delle fasi S3-S4 dipendono dalle misure registrate nei report;
+  l'assenza della misura HTTP comparabile rende il gate bloccato.
+- L'API e il probe locale non costituiscono verifica di container o deployment.
+- v2 resta candidata e non attivata; il drill S5-S6 è fuori da questa fase.

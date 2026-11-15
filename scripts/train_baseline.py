@@ -59,7 +59,7 @@ for _stream in (sys.stdout, sys.stderr):
         except (OSError, ValueError):
             pass
 
-STATUS = (
+BASELINE_STATUS = (
     "Baseline valutata sulla validation distribuita. Serving API, candidata v2, "
     "gate misurato, attivazione e rollback non sono implementati: v1 non è "
     "dichiarata pronta al deployment."
@@ -104,9 +104,11 @@ def _build_metadata(
 
     return {
         "version": config.version,
-        "phase": "S2",
+        "phase": "S2" if config.version == "v1" else "S3-S4",
         "created_at_utc": generated_at,
-        "status": STATUS,
+        "status": BASELINE_STATUS if config.version == "v1" else (
+            "Candidata v2 valutata in S3-S4; non attivata."
+        ),
         "model": {
             "params": config.params,
             "random_state": config.seed,
@@ -192,10 +194,10 @@ def _build_report(
     """Report di valutazione: metriche, run ID, file dati, split e artefatto."""
 
     return {
-        "phase": "S2",
+        "phase": "S2" if metadata["version"] == "v1" else "S3-S4",
         "version": metadata["version"],
         "generated_at_utc": generated_at,
-        "status": STATUS,
+        "status": metadata["status"],
         "mlflow": metadata["mlflow"],
         "dataset": {
             "path": metadata["dataset"]["path"],
@@ -239,7 +241,7 @@ def _render_markdown(report: dict[str, Any]) -> str:
     params = report["pipeline"]["params"]
 
     lines: list[str] = [
-        f"# Valutazione baseline {report['version']} - S2",
+        f"# Valutazione {report['version']} - {report['phase']}",
         "",
         f"Generato (UTC): `{report['generated_at_utc']}`",
         f"Stato: {report['status']}",
@@ -445,7 +447,7 @@ def main(argv: list[str] | None = None) -> int:
         with tracked_run(
             tracking_uri=settings.tracking_uri.value,
             experiment_name=settings.mlflow_experiment_name,
-            run_name=f"{config.version}-baseline",
+            run_name=f"{config.version}-{'baseline' if config.version == 'v1' else 'candidate'}",
         ) as run:
             metadata = _build_metadata(
                 config=config,
@@ -488,7 +490,7 @@ def main(argv: list[str] | None = None) -> int:
                 },
                 metrics=_metrics_for_tracking(evaluation, dataset),
                 tags={
-                    "phase": "S2",
+                    "phase": "S2" if config.version == "v1" else "S3-S4",
                     "version": config.version,
                     "dataset_sha256": dataset.sha256,
                     "split_column": "split (distribuito, non rigenerato)",
@@ -499,7 +501,7 @@ def main(argv: list[str] | None = None) -> int:
                     "artifact_path": display_path(saved.artifact_path),
                     "metadata_path": display_path(saved.metadata_path),
                     "config": json.dumps(config.params, ensure_ascii=False),
-                    "status": STATUS,
+                    "status": metadata["status"],
                 },
                 artifacts=[
                     saved.artifact_path,

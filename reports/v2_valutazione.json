@@ -1,0 +1,142 @@
+{
+  "phase": "S3-S4",
+  "version": "v2",
+  "generated_at_utc": "2026-11-15T14:56:12+00:00",
+  "status": "Candidata v2 valutata in S3-S4; non attivata.",
+  "mlflow": {
+    "tracking_uri": "mlruns",
+    "tracking_uri_origin": "store locale predefinito del progetto",
+    "external_connection_required": false,
+    "experiment_name": "lab13-progetto3-ritardi-consegne",
+    "experiment_id": "684684872782029071",
+    "run_id": "5258ffae2cec4803b81e47220dd2137e",
+    "run_name": "v2-candidate",
+    "logged_params": {
+      "pipeline_steps": [
+        "scaler",
+        "classifier"
+      ],
+      "scaler": "StandardScaler",
+      "classifier": "LogisticRegression",
+      "C": 0.5,
+      "solver": "liblinear",
+      "max_iter": 1000,
+      "random_state": 1303
+    },
+    "logged_metrics": {
+      "accuracy": 0.735,
+      "precision_class_1": 0.6741573033707865,
+      "recall_class_1": 0.7142857142857143,
+      "confusion_tp": 60.0,
+      "confusion_fp": 29.0,
+      "confusion_fn": 24.0,
+      "confusion_tn": 87.0,
+      "train_rows": 800.0,
+      "validation_rows": 200.0
+    }
+  },
+  "dataset": {
+    "path": "dataset (1).csv",
+    "origin_label": "copia assegnata nella cartella del progetto",
+    "sha256": "5c999d24a24126e81a033ae5ecf9b9b1049925f8abe59367883bcd171476c72f"
+  },
+  "split": {
+    "column": "split",
+    "regenerated": false,
+    "train_rows": 800,
+    "validation_rows": 200,
+    "counts_by_split_and_class": {
+      "train": {
+        "0": 463,
+        "1": 337,
+        "total": 800
+      },
+      "validation": {
+        "0": 116,
+        "1": 84,
+        "total": 200
+      },
+      "all": {
+        "0": 579,
+        "1": 421,
+        "total": 1000
+      }
+    }
+  },
+  "training_policy": {
+    "fit_split": "train",
+    "scaler_fit_on": "train",
+    "validation_used_for": "valutazione didattica",
+    "validation_used_for_fit": false,
+    "validation_used_for_tuning_or_param_choice": false,
+    "requests_csv_used_for_training": false,
+    "requests_note": "richieste_monitoraggio.csv è input operativo per le prove API: non è entrato nel fit né nella valutazione."
+  },
+  "pipeline": {
+    "params": {
+      "pipeline_steps": [
+        "scaler",
+        "classifier"
+      ],
+      "scaler": "StandardScaler",
+      "classifier": "LogisticRegression",
+      "C": 0.5,
+      "solver": "liblinear",
+      "max_iter": 1000,
+      "random_state": 1303
+    },
+    "random_state": 1303,
+    "reproducibility": {
+      "seed": 1303,
+      "claim": "due esecuzioni sugli stessi dati con gli stessi parametri producono le stesse predizioni; verificato in tests/test_training.py"
+    }
+  },
+  "metrics": {
+    "class_order": [
+      0,
+      1
+    ],
+    "positive_class": 1,
+    "rows": 200,
+    "accuracy": 0.735,
+    "precision_class_1": 0.6741573033707865,
+    "recall_class_1": 0.7142857142857143,
+    "confusion_matrix": [
+      [
+        87,
+        29
+      ],
+      [
+        24,
+        60
+      ]
+    ],
+    "confusion_matrix_semantics": "righe = classe reale, colonne = classe predetta, ordine [0, 1]",
+    "counts": {
+      "tn": 87,
+      "fp": 29,
+      "fn": 24,
+      "tp": 60
+    }
+  },
+  "artifact": {
+    "filename": "pipeline.joblib",
+    "sha256": "5b9dc55028ac824b0602da7e9bf4a090a4f5eb30753bfb1d83b1037601856e63",
+    "size_bytes": 2317
+  },
+  "artifacts": {
+    "directory": "models/v2",
+    "pipeline": "models/v2/pipeline.joblib",
+    "metadata": "models/v2/model_metadata.json",
+    "predictions": "models/v2/validation_predictions.json",
+    "report_json": "reports/v2_valutazione.json",
+    "report_markdown": "reports/v2_valutazione.md"
+  },
+  "warnings": [],
+  "limits": [
+    "Dati interamente sintetici: le metriche non misurano spedizioni reali.",
+    "La validation assegnata non è un test indipendente.",
+    "Il gate (config/gate.json) non è misurato in S2: mancano servizio, candidata, p95 ed error rate.",
+    "v1 non è attivata: S3-S6 non sono implementate."
+  ]
+}
