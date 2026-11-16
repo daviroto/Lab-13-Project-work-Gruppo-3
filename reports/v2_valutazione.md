@@ -1,7 +1,12 @@
 # Valutazione v2 - S3-S4
 
 Generato (UTC): `2026-11-15T14:56:12+00:00`
-Stato: Candidata v2 valutata in S3-S4; non attivata.
+Stato al momento del report (S3-S4): Candidata v2 valutata in S3-S4; non ancora attivata.
+
+> **Nota successiva (S5-S6):** questo report è la fotografia della fase S3-S4 e
+> non è stato ricalcolato. v2 è stata attivata solo nel drill locale e poi
+> ripristinata: lo stato finale è v1. Vedi `docs/consegna_s4_s5.md`,
+> `docs/consegna_finale.md` e `reports/drill_s5_s6.md`.
 
 ## Run MLflow
 
@@ -67,4 +72,4 @@ Una seconda esecuzione sulla stessa versione termina con errore esplicito e non 
 - Dati interamente sintetici: le metriche non misurano spedizioni reali.
 - La validation assegnata non è un test indipendente.
 - Il gate (config/gate.json) non è misurato in S2: mancano servizio, candidata, p95 ed error rate.
-- v1 non è attivata: S3-S6 non sono implementate.
+- Al momento del report v1 non era attivata e S3-S6 non erano implementate.

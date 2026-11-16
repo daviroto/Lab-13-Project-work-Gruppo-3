@@ -113,3 +113,16 @@ In questa fase non esistono ancora modello addestrato, metriche di validation,
 servizio HTTP o probe di latenza. Non vengono quindi dichiarati risultati o
 superamenti del gate. Le metriche saranno misurate e riportate nelle fasi
 successive, senza cambiare le soglie qui fissate.
+
+## Stato finale (S1-S6)
+
+Il gate è stato misurato in S4 con la baseline isolata
+`comparison_baseline/models/v1`: accuracy v2 `0.735` uguale alla baseline,
+p95 HTTP `28,3657 ms`, error rate `0/30`. Decisione registrata:
+**SUPERATO**. Le soglie di `config/gate.json` non sono state modificate dopo i
+risultati.
+
+v2 non è stata attivata come deployment: è stata attivata solo nel drill locale
+`v1 → v2 → v1` e poi ripristinata. Lo stato finale del serving è **v1**.
+Dettagli: `reports/gate_s4.md`, `docs/consegna_s4_s5.md` e
+`reports/drill_s5_s6.md`.

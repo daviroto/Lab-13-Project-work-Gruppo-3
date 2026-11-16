@@ -203,11 +203,19 @@ def load_version(
     *,
     expected_version: str | None = None,
     expected_dataset_sha256: str | None = None,
+    expected_dataset_canonical_sha256: str | None = None,
 ) -> LoadedModel:
     """Carica una versione solo se tutti i controlli sono superati.
 
     Controlli, nell'ordine: metadati, versione, schema/ordine feature,
     fingerprint del dataset, hash dell'artefatto, contratto della pipeline.
+
+    Il fingerprint può essere verificato in due modi: con lo SHA-256 raw dei
+    byte (``expected_dataset_sha256``, comportamento storico) oppure con lo
+    SHA-256 canonico del contenuto (``expected_dataset_canonical_sha256``), che
+    ignora la differenza ``CRLF``/``LF`` introdotta dal checkout. Il confronto
+    canonico richiede il campo ``dataset.sha256_canonical`` nei metadati; se
+    assente si ricade sull'hash raw dichiarato.
     """
 
     directory = Path(version_dir).expanduser()
@@ -274,12 +282,23 @@ def load_version(
         )
 
     declared_dataset_sha = metadata["dataset"]["sha256"]
-    if expected_dataset_sha256 is None:
+    declared_dataset_canonical = metadata["dataset"].get("sha256_canonical")
+
+    if expected_dataset_canonical_sha256 is not None:
+        declared_fingerprint = declared_dataset_canonical or declared_dataset_sha
+        if declared_fingerprint != expected_dataset_canonical_sha256:
+            raise ModelLoadError(
+                "Controllo 'fingerprint del dataset' non superato: metadati "
+                f"dichiarano (canonico) {declared_fingerprint}, dataset atteso "
+                f"{expected_dataset_canonical_sha256}."
+            )
+    elif expected_dataset_sha256 is None:
         raise ModelLoadError(
             "Controllo 'fingerprint del dataset' non superato: fingerprint "
-            "atteso non fornito (passare expected_dataset_sha256)."
+            "atteso non fornito (passare expected_dataset_sha256 o "
+            "expected_dataset_canonical_sha256)."
         )
-    if declared_dataset_sha != expected_dataset_sha256:
+    elif declared_dataset_sha != expected_dataset_sha256:
         raise ModelLoadError(
             "Controllo 'fingerprint del dataset' non superato: metadati "
             f"dichiarano {declared_dataset_sha}, dataset atteso "

@@ -122,7 +122,9 @@ def main() -> int:
     payload, source_request_id = load_candidate_payload(settings.requests.path)
     dataset = load_dataset(settings.dataset.path)
     candidate = load_version(
-        ROOT / "models" / "v2", expected_version="v2", expected_dataset_sha256=dataset.sha256
+        ROOT / "models" / "v2",
+        expected_version="v2",
+        expected_dataset_canonical_sha256=dataset.sha256_canonical,
     )
     report: dict[str, Any] = {
         "phase": "S3-S4",
@@ -131,6 +133,7 @@ def main() -> int:
         "run_id": candidate.run_id,
         "artifact_sha256": candidate.artifact_sha256,
         "dataset_sha256": dataset.sha256,
+        "dataset_sha256_canonical": dataset.sha256_canonical,
         "request_source": str(settings.requests.path.name),
         "request_id_source": source_request_id,
         "in_process": run_in_process(candidate, payload),

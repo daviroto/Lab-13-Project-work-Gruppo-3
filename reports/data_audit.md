@@ -1,12 +1,13 @@
 # Audit dati - S1
 
-Generato (UTC): `2026-11-09T11:20:46+00:00`
+Generato (UTC): `2026-11-16T00:24:05+00:00`
 
 ## Dataset
 
 - Percorso: `dataset (1).csv`
 - Provenienza: copia assegnata nella cartella del progetto
 - SHA-256 dei byte CSV: `afee41161484c561feb59576f464321f3f0453c00acb9752a9173a7755e97c79`
+- SHA-256 canonico (CRLF/LF normalizzati): `5c999d24a24126e81a033ae5ecf9b9b1049925f8abe59367883bcd171476c72f`
 - Righe: 1000
 - Feature canoniche: 30
 

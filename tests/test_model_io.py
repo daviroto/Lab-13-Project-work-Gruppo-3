@@ -41,16 +41,24 @@ except ImportError as exc:  # pragma: no cover - ambiente senza dipendenze
     IMPORT_ERROR = str(exc)
 
 
-def _metadata(*, version: str, dataset_sha256: str) -> dict[str, Any]:
+def _metadata(
+    *,
+    version: str,
+    dataset_sha256: str,
+    dataset_sha256_canonical: str | None = None,
+) -> dict[str, Any]:
     """Metadati minimi con le chiavi che il caricatore pretende."""
 
+    dataset = {"sha256": dataset_sha256}
+    if dataset_sha256_canonical is not None:
+        dataset["sha256_canonical"] = dataset_sha256_canonical
     return {
         "version": version,
         "model": {"params": BaselineConfig().params},
         "feature_names": list(FEATURE_NAMES),
         "feature_count": FEATURE_COUNT,
         "classes": {"order": [0, 1], "positive_class": 1},
-        "dataset": {"sha256": dataset_sha256},
+        "dataset": dataset,
         "validation": {"ids": ["id_0001"]},
         "artifact": {},
         "mlflow": {"run_id": "run-test-1"},
@@ -75,12 +83,24 @@ class VersionArtifactTests(unittest.TestCase):
     def tearDown(self) -> None:
         self._tmp.cleanup()
 
-    def _save(self, version: str = "v1") -> Any:
+    def _save(
+        self,
+        version: str = "v1",
+        *,
+        dataset_sha256: str | None = None,
+        dataset_sha256_canonical: str | None = None,
+    ) -> Any:
         return save_version(
             version=version,
             models_dir=self.models,
             pipeline=self.pipeline,
-            metadata=_metadata(version=version, dataset_sha256=self.dataset.sha256),
+            metadata=_metadata(
+                version=version,
+                dataset_sha256=dataset_sha256 or self.dataset.sha256,
+                dataset_sha256_canonical=(
+                    dataset_sha256_canonical or self.dataset.sha256_canonical
+                ),
+            ),
             prediction_rows=self.rows,
         )
 
@@ -139,6 +159,24 @@ class VersionArtifactTests(unittest.TestCase):
         with self.assertRaises(ModelLoadError) as caught:
             load_version(saved.directory, expected_dataset_sha256="0" * 64)
         self.assertIn("Controllo 'fingerprint del dataset'", str(caught.exception))
+
+    def test_canonical_fingerprint_ignores_raw_byte_difference(self) -> None:
+        # Stesso contenuto, byte diversi (per esempio CRLF del checkout): il
+        # confronto canonico deve accettare l'artefatto.
+        saved = self._save(
+            dataset_sha256="f" * 64,
+            dataset_sha256_canonical=self.dataset.sha256_canonical,
+        )
+        loaded = load_version(
+            saved.directory,
+            expected_dataset_canonical_sha256=self.dataset.sha256_canonical,
+        )
+        self.assertEqual(loaded.version, "v1")
+        with self.assertRaises(ModelLoadError) as caught:
+            load_version(
+                saved.directory, expected_dataset_canonical_sha256="0" * 64
+            )
+        self.assertIn("(canonico)", str(caught.exception))
 
     def test_missing_expected_fingerprint_is_named(self) -> None:
         saved = self._save()

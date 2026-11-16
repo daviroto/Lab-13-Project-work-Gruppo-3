@@ -1,0 +1,4 @@
+{"timestamp": "2026-11-16T00:25:08.665+00:00", "request_id": "req_01", "version": "v1", "run_id": "64079619c2c947bd83699d0d552b9d78", "http_status": 200, "duration_ms": 1.94, "path": "/predict"}
+{"timestamp": "2026-11-16T00:25:08.789+00:00", "request_id": "req_02", "version": "v2", "run_id": "5258ffae2cec4803b81e47220dd2137e", "http_status": 200, "duration_ms": 1.168, "path": "/predict"}
+{"timestamp": "2026-11-16T00:25:08.838+00:00", "request_id": "req_03", "version": "v1", "run_id": "64079619c2c947bd83699d0d552b9d78", "http_status": 200, "duration_ms": 0.933, "path": "/predict"}
+{"timestamp": "2026-11-16T00:25:08.848+00:00", "request_id": "req_04", "version": "v1", "run_id": "64079619c2c947bd83699d0d552b9d78", "http_status": 422, "duration_ms": 0.498, "path": "/predict"}

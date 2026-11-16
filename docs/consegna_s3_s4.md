@@ -1,5 +1,11 @@
 # Passaggio di consegne - S3 e S4
 
+> **Aggiornamento S5-S6:** il drill di cambio versione/rollback è stato
+> completato in seguito. Questo documento resta la fotografia dello stato
+> S3-S4; per lo stato finale vedere `docs/consegna_finale.md`, il dettaglio
+> delle modifiche `docs/consegna_s4_s5.md` e il report
+> `reports/drill_s5_s6.md`.
+
 ## Stato consegnato
 
 S3 (servizio FastAPI e telemetria) e S4 (candidata v2 e gate) sono implementate.
@@ -29,12 +35,18 @@ La baseline isolata è identificata dal run MLflow
 `5258ffae2cec4803b81e47220dd2137e`. Sono conservati i relativi store MLflow e
 gli artefatti nel progetto.
 
+> **Aggiornamento S5:** la differenza è stata ricondotta ai line ending del
+> checkout (`CRLF` su Windows, `LF` su Linux), non a dati diversi. Lo SHA-256
+> canonico, calcolato normalizzando `CRLF` a `LF`, è
+> `5c999d24a24126e81a033ae5ecf9b9b1049925f8abe59367883bcd171476c72f` per
+> entrambi. Dettagli e verifica: `reports/fingerprint_coerenza.md`.
+
 ## Versione attiva e perimetro
 
-`config/active_version.json` continua a indicare `v1`. v2 non è stata attivata.
-Non sono stati eseguiti il drill di cambio/ripristino, il rollback o le attività
-di S5-S6. Chi continua il lab deve trattare l'attivazione come un passaggio
-separato e riferirsi alle istruzioni della fase successiva.
+Al momento di questa consegna `config/active_version.json` indicava `v1` e v2
+non era stata attivata. Il drill di cambio/ripristino e il rollback sono stati
+eseguiti successivamente in S5-S6: v2 è stata attiva solo nel drill locale e lo
+stato finale è tornato a v1. Dettagli: `docs/consegna_s4_s5.md`.
 
 ## File utili
 

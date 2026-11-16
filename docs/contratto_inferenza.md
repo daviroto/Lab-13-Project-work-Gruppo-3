@@ -1,8 +1,13 @@
 # Contratto dei dati e dell'inferenza
 
 Fase S1 del Laboratorio 13 - Progetto 3, previsione dei ritardi nelle consegne
-logistiche. Il documento descrive il contratto condiviso; non implementa il
-servizio di inferenza, il training o la candidata v2.
+logistiche. Il documento descrive il contratto condiviso; è stato implementato
+successivamente in `src/lab13/contracts.py` e usato dal servizio.
+
+> **Stato successivo (S3-S6):** il servizio applica questo contratto prima del
+> predict. Nel drill finale `req_04`, con 29 feature, restituisce 422 con codice
+> `wrong_feature_count`, senza completare il payload. Vedi
+> `docs/consegna_s4_s5.md` e `reports/drill_s5_s6.md`.
 
 ## Momento della previsione
 

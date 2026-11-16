@@ -1,0 +1,328 @@
+{
+  "phase": "S5-S6",
+  "generated_at_utc": "2026-11-16T00:25:08+00:00",
+  "scope": "drill locale di cambio versione e rollback; non è un deployment di produzione e non sostituisce la probe/gate S4",
+  "base_url": "http://127.0.0.1:8000",
+  "server": {
+    "mode": "auto-started",
+    "start_health": {
+      "status": "ok",
+      "active_version": "v1",
+      "run_id": "64079619c2c947bd83699d0d552b9d78",
+      "artifact_sha256": "f8aea6264329d4c53d1f87e270c10ef7a3567c739c59c5796ccf116ccb7e1bd7",
+      "dataset_sha256": "afee41161484c561feb59576f464321f3f0453c00acb9752a9173a7755e97c79",
+      "dataset_sha256_canonical": "5c999d24a24126e81a033ae5ecf9b9b1049925f8abe59367883bcd171476c72f"
+    },
+    "start_version": "v1"
+  },
+  "requests": [
+    {
+      "request_id": "req_01",
+      "target_version": "v1",
+      "expected_status": 200,
+      "actual_status": 200,
+      "status_ok": true,
+      "duration_ms": 26.71,
+      "response": {
+        "prediction": 0,
+        "version": "v1",
+        "run_id": "64079619c2c947bd83699d0d552b9d78",
+        "request_id": "req_01"
+      },
+      "transport_error": null,
+      "request_id_echo_ok": true,
+      "payload_valid": true,
+      "payload_validation_error": null,
+      "log": {
+        "timestamp": "2026-11-16T00:25:08.665+00:00",
+        "request_id": "req_01",
+        "version": "v1",
+        "run_id": "64079619c2c947bd83699d0d552b9d78",
+        "http_status": 200,
+        "duration_ms": 1.94,
+        "path": "/predict"
+      },
+      "log_correlated": true,
+      "prediction": 0,
+      "served_version": "v1",
+      "served_run_id": "64079619c2c947bd83699d0d552b9d78"
+    },
+    {
+      "request_id": "req_02",
+      "target_version": "v2",
+      "expected_status": 200,
+      "actual_status": 200,
+      "status_ok": true,
+      "duration_ms": 16.829,
+      "response": {
+        "prediction": 1,
+        "version": "v2",
+        "run_id": "5258ffae2cec4803b81e47220dd2137e",
+        "request_id": "req_02"
+      },
+      "transport_error": null,
+      "request_id_echo_ok": true,
+      "payload_valid": true,
+      "payload_validation_error": null,
+      "log": {
+        "timestamp": "2026-11-16T00:25:08.789+00:00",
+        "request_id": "req_02",
+        "version": "v2",
+        "run_id": "5258ffae2cec4803b81e47220dd2137e",
+        "http_status": 200,
+        "duration_ms": 1.168,
+        "path": "/predict"
+      },
+      "log_correlated": true,
+      "prediction": 1,
+      "served_version": "v2",
+      "served_run_id": "5258ffae2cec4803b81e47220dd2137e"
+    },
+    {
+      "request_id": "req_03",
+      "target_version": "v1",
+      "expected_status": 200,
+      "actual_status": 200,
+      "status_ok": true,
+      "duration_ms": 2.401,
+      "response": {
+        "prediction": 1,
+        "version": "v1",
+        "run_id": "64079619c2c947bd83699d0d552b9d78",
+        "request_id": "req_03"
+      },
+      "transport_error": null,
+      "request_id_echo_ok": true,
+      "payload_valid": true,
+      "payload_validation_error": null,
+      "log": {
+        "timestamp": "2026-11-16T00:25:08.838+00:00",
+        "request_id": "req_03",
+        "version": "v1",
+        "run_id": "64079619c2c947bd83699d0d552b9d78",
+        "http_status": 200,
+        "duration_ms": 0.933,
+        "path": "/predict"
+      },
+      "log_correlated": true,
+      "prediction": 1,
+      "served_version": "v1",
+      "served_run_id": "64079619c2c947bd83699d0d552b9d78"
+    },
+    {
+      "request_id": "req_04",
+      "target_version": "v1",
+      "expected_status": 422,
+      "actual_status": 422,
+      "status_ok": true,
+      "duration_ms": 2.315,
+      "response": {
+        "detail": "Il campo 'features' deve contenere 30 valori; ricevuti 29. Le richieste incomplete non vengono completate.",
+        "code": "wrong_feature_count",
+        "request_id": "req_04"
+      },
+      "transport_error": null,
+      "request_id_echo_ok": true,
+      "payload_valid": false,
+      "payload_validation_error": "wrong_feature_count: Il campo 'features' deve contenere 30 valori; ricevuti 29. Le richieste incomplete non vengono completate.",
+      "log": {
+        "timestamp": "2026-11-16T00:25:08.848+00:00",
+        "request_id": "req_04",
+        "version": "v1",
+        "run_id": "64079619c2c947bd83699d0d552b9d78",
+        "http_status": 422,
+        "duration_ms": 0.498,
+        "path": "/predict"
+      },
+      "log_correlated": true,
+      "prediction": null,
+      "served_version": null,
+      "served_run_id": null
+    }
+  ],
+  "transitions": [
+    {
+      "timestamp": "2026-11-16T00:25:08+00:00",
+      "action": "activate",
+      "mode": "drill",
+      "before": {
+        "version": "v1",
+        "run_id": "64079619c2c947bd83699d0d552b9d78",
+        "artifact_sha256": "f8aea6264329d4c53d1f87e270c10ef7a3567c739c59c5796ccf116ccb7e1bd7"
+      },
+      "after": {
+        "version": "v2",
+        "run_id": "5258ffae2cec4803b81e47220dd2137e",
+        "artifact_sha256": "5b9dc55028ac824b0602da7e9bf4a090a4f5eb30753bfb1d83b1037601856e63"
+      },
+      "response": {
+        "changed": true,
+        "previous_version": "v1",
+        "active_version": "v2",
+        "run_id": "5258ffae2cec4803b81e47220dd2137e",
+        "artifact_sha256": "5b9dc55028ac824b0602da7e9bf4a090a4f5eb30753bfb1d83b1037601856e63",
+        "dataset_sha256_canonical": "5c999d24a24126e81a033ae5ecf9b9b1049925f8abe59367883bcd171476c72f",
+        "mode": "drill",
+        "action": "activate",
+        "state": {
+          "schema_version": 1,
+          "version": "v2",
+          "previous_version": "v1",
+          "action": "activate",
+          "mode": "drill",
+          "updated_at": "2026-11-16T00:25:08+00:00",
+          "run_id": "5258ffae2cec4803b81e47220dd2137e",
+          "artifact_sha256": "5b9dc55028ac824b0602da7e9bf4a090a4f5eb30753bfb1d83b1037601856e63",
+          "dataset_sha256_canonical": "5c999d24a24126e81a033ae5ecf9b9b1049925f8abe59367883bcd171476c72f",
+          "source": "service-admin"
+        },
+        "request_id": "9f238ddf-bae4-4f76-946e-38a5efdff680"
+      }
+    },
+    {
+      "timestamp": "2026-11-16T00:25:08+00:00",
+      "action": "rollback",
+      "mode": "drill",
+      "before": {
+        "version": "v2",
+        "run_id": "5258ffae2cec4803b81e47220dd2137e",
+        "artifact_sha256": "5b9dc55028ac824b0602da7e9bf4a090a4f5eb30753bfb1d83b1037601856e63"
+      },
+      "after": {
+        "version": "v1",
+        "run_id": "64079619c2c947bd83699d0d552b9d78",
+        "artifact_sha256": "f8aea6264329d4c53d1f87e270c10ef7a3567c739c59c5796ccf116ccb7e1bd7"
+      },
+      "response": {
+        "changed": true,
+        "previous_version": "v2",
+        "active_version": "v1",
+        "run_id": "64079619c2c947bd83699d0d552b9d78",
+        "artifact_sha256": "f8aea6264329d4c53d1f87e270c10ef7a3567c739c59c5796ccf116ccb7e1bd7",
+        "dataset_sha256_canonical": "5c999d24a24126e81a033ae5ecf9b9b1049925f8abe59367883bcd171476c72f",
+        "mode": "drill",
+        "action": "rollback",
+        "state": {
+          "schema_version": 1,
+          "version": "v1",
+          "previous_version": "v2",
+          "action": "rollback",
+          "mode": "drill",
+          "updated_at": "2026-11-16T00:25:08+00:00",
+          "run_id": "64079619c2c947bd83699d0d552b9d78",
+          "artifact_sha256": "f8aea6264329d4c53d1f87e270c10ef7a3567c739c59c5796ccf116ccb7e1bd7",
+          "dataset_sha256_canonical": "5c999d24a24126e81a033ae5ecf9b9b1049925f8abe59367883bcd171476c72f",
+          "source": "service-admin"
+        },
+        "request_id": "355c2656-53a2-4d09-b16a-a1d42be46eb5"
+      }
+    }
+  ],
+  "state_after_requests": {
+    "schema_version": 1,
+    "version": "v1",
+    "previous_version": "v2",
+    "action": "rollback",
+    "mode": "drill",
+    "updated_at": "2026-11-16T00:25:08+00:00",
+    "run_id": "64079619c2c947bd83699d0d552b9d78",
+    "artifact_sha256": "f8aea6264329d4c53d1f87e270c10ef7a3567c739c59c5796ccf116ccb7e1bd7",
+    "dataset_sha256_canonical": "5c999d24a24126e81a033ae5ecf9b9b1049925f8abe59367883bcd171476c72f",
+    "source": "service-admin"
+  },
+  "final_state": {
+    "schema_version": 1,
+    "version": "v1",
+    "previous_version": "v2",
+    "action": "rollback",
+    "mode": "drill",
+    "updated_at": "2026-11-16T00:25:08+00:00",
+    "run_id": "64079619c2c947bd83699d0d552b9d78",
+    "artifact_sha256": "f8aea6264329d4c53d1f87e270c10ef7a3567c739c59c5796ccf116ccb7e1bd7",
+    "dataset_sha256_canonical": "5c999d24a24126e81a033ae5ecf9b9b1049925f8abe59367883bcd171476c72f",
+    "source": "service-admin"
+  },
+  "final_health": {
+    "status": "ok",
+    "active_version": "v1",
+    "run_id": "64079619c2c947bd83699d0d552b9d78",
+    "artifact_sha256": "f8aea6264329d4c53d1f87e270c10ef7a3567c739c59c5796ccf116ccb7e1bd7",
+    "dataset_sha256": "afee41161484c561feb59576f464321f3f0453c00acb9752a9173a7755e97c79",
+    "dataset_sha256_canonical": "5c999d24a24126e81a033ae5ecf9b9b1049925f8abe59367883bcd171476c72f"
+  },
+  "final_artifact": {
+    "version": "v1",
+    "metadata_run_id": "64079619c2c947bd83699d0d552b9d78",
+    "metadata_artifact_sha256": "f8aea6264329d4c53d1f87e270c10ef7a3567c739c59c5796ccf116ccb7e1bd7",
+    "metadata_dataset_sha256_canonical": "5c999d24a24126e81a033ae5ecf9b9b1049925f8abe59367883bcd171476c72f",
+    "matches_health": true
+  },
+  "sequence_ok": true,
+  "statuses_ok": true,
+  "final_ok": true,
+  "drill_error_rate": {
+    "requests": 4,
+    "http_errors_ge_400": 1,
+    "value": 0.25,
+    "definition": "error rate del drill su tutte le 4 richieste: 3 risposte valide e 1 errore atteso (422). Non sostituisce l'error rate del gate."
+  },
+  "valid_requests_error_rate": {
+    "requests": 3,
+    "http_errors_ge_400": 0,
+    "value": 0.0,
+    "definition": "error rate sulle sole richieste con esito atteso 200."
+  },
+  "gate_relation": "Il gate S4 usa la probe HTTP della candidata (30 richieste valide, error rate 0/30). Il drill ha 3 risposte valide e 1 errore atteso su 4 richieste: il suo 0,25 non sostituisce la misura del gate.",
+  "environment": {
+    "python": "3.12.4",
+    "platform": "win32",
+    "packages": {
+      "numpy": "2.4.5",
+      "scikit-learn": "1.9.0",
+      "mlflow": "non disponibile",
+      "joblib": "1.5.3"
+    }
+  },
+  "limits": [
+    "Dati sintetici e didattici: il drill non misura spedizioni reali.",
+    "Il cambio versione è locale e abilitato solo con LAB13_ALLOW_VERSION_SWITCH=1.",
+    "Nessun container o deployment esterno è stato eseguito.",
+    "Lo stato finale è v1; v2 resta una candidata approvata dal gate ma non attiva."
+  ],
+  "transitions_journal": [
+    {
+      "timestamp": "2026-11-16T00:25:08+00:00",
+      "action": "activate",
+      "mode": "drill",
+      "source": "service-admin",
+      "before": {
+        "version": "v1",
+        "run_id": "64079619c2c947bd83699d0d552b9d78",
+        "artifact_sha256": "f8aea6264329d4c53d1f87e270c10ef7a3567c739c59c5796ccf116ccb7e1bd7"
+      },
+      "after": {
+        "version": "v2",
+        "run_id": "5258ffae2cec4803b81e47220dd2137e",
+        "artifact_sha256": "5b9dc55028ac824b0602da7e9bf4a090a4f5eb30753bfb1d83b1037601856e63"
+      },
+      "dataset_sha256_canonical": "5c999d24a24126e81a033ae5ecf9b9b1049925f8abe59367883bcd171476c72f"
+    },
+    {
+      "timestamp": "2026-11-16T00:25:08+00:00",
+      "action": "rollback",
+      "mode": "drill",
+      "source": "service-admin",
+      "before": {
+        "version": "v2",
+        "run_id": "5258ffae2cec4803b81e47220dd2137e",
+        "artifact_sha256": "5b9dc55028ac824b0602da7e9bf4a090a4f5eb30753bfb1d83b1037601856e63"
+      },
+      "after": {
+        "version": "v1",
+        "run_id": "64079619c2c947bd83699d0d552b9d78",
+        "artifact_sha256": "f8aea6264329d4c53d1f87e270c10ef7a3567c739c59c5796ccf116ccb7e1bd7"
+      },
+      "dataset_sha256_canonical": "5c999d24a24126e81a033ae5ecf9b9b1049925f8abe59367883bcd171476c72f"
+    }
+  ]
+}

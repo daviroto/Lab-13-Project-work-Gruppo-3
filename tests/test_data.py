@@ -33,6 +33,7 @@ from lab13.data import (  # noqa: E402
     DatasetValidationError,
     load_dataset,
     sha256_bytes,
+    sha256_canonical_bytes,
 )
 
 
@@ -60,10 +61,11 @@ def _write_csv(
     header: tuple[str, ...] = EXPECTED_COLUMNS,
     *,
     encoding: str = "utf-8",
+    lineterminator: str = "\n",
 ) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
     with path.open("w", encoding=encoding, newline="") as handle:
-        writer = csv.writer(handle, lineterminator="\n")
+        writer = csv.writer(handle, lineterminator=lineterminator)
         writer.writerow(header)
         writer.writerows(rows)
 
@@ -110,6 +112,31 @@ class DatasetReaderTests(unittest.TestCase):
         load_dataset(self.path)
         self.assertEqual(self.path.read_bytes(), before)
         self.assertEqual(sha256_bytes(before), hashlib.sha256(before).hexdigest())
+
+    def test_canonical_fingerprint_ignores_crlf_and_lf(self) -> None:
+        rows = _valid_rows()
+        lf_path = self.tmp / "lf.csv"
+        crlf_path = self.tmp / "crlf.csv"
+        _write_csv(lf_path, rows, lineterminator="\n")
+        _write_csv(crlf_path, rows, lineterminator="\r\n")
+
+        lf_bytes = lf_path.read_bytes()
+        crlf_bytes = crlf_path.read_bytes()
+        self.assertNotEqual(sha256_bytes(lf_bytes), sha256_bytes(crlf_bytes))
+        self.assertEqual(
+            sha256_canonical_bytes(lf_bytes),
+            sha256_canonical_bytes(crlf_bytes),
+        )
+
+        lf_dataset = load_dataset(lf_path)
+        crlf_dataset = load_dataset(crlf_path)
+        self.assertNotEqual(lf_dataset.sha256, crlf_dataset.sha256)
+        self.assertEqual(
+            lf_dataset.sha256_canonical, crlf_dataset.sha256_canonical
+        )
+        self.assertEqual(
+            lf_dataset.sha256_canonical, sha256_canonical_bytes(lf_bytes)
+        )
 
     def test_columns_are_reordered_to_canonical_feature_order(self) -> None:
         features = {name: float(index) for index, name in enumerate(FEATURE_NAMES)}

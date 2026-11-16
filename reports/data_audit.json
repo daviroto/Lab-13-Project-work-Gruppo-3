@@ -1,9 +1,10 @@
 {
   "phase": "S1",
-  "generated_at_utc": "2026-11-09T11:20:46+00:00",
+  "generated_at_utc": "2026-11-16T00:24:05+00:00",
   "dataset": {
     "dataset_path": "dataset (1).csv",
     "dataset_sha256": "afee41161484c561feb59576f464321f3f0453c00acb9752a9173a7755e97c79",
+    "dataset_sha256_canonical": "5c999d24a24126e81a033ae5ecf9b9b1049925f8abe59367883bcd171476c72f",
     "row_count": 1000,
     "feature_count": 30,
     "feature_names": [

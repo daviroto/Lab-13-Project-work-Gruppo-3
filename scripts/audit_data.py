@@ -106,6 +106,7 @@ def _render_markdown(report: dict[str, Any]) -> str:
         f"- Percorso: `{dataset['dataset_path']}`",
         f"- Provenienza: {dataset['origin_label']}",
         f"- SHA-256 dei byte CSV: `{dataset['dataset_sha256']}`",
+        f"- SHA-256 canonico (CRLF/LF normalizzati): `{dataset.get('dataset_sha256_canonical', 'non disponibile')}`",
         f"- Righe: {dataset['row_count']}",
         f"- Feature canoniche: {dataset['feature_count']}",
         "",
@@ -164,7 +165,11 @@ def _print_summary(report: dict[str, Any], report_dir: Path | None) -> None:
     print("Audit dati S1 - Progetto 3 (ritardi nelle consegne logistiche)")
     print(f"Dataset: {dataset['dataset_path']}")
     print(f"Origine: {dataset['origin_label']}")
-    print(f"SHA-256: {dataset['dataset_sha256']}")
+    print(f"SHA-256 (byte): {dataset['dataset_sha256']}")
+    print(
+        "SHA-256 canonico: "
+        f"{dataset.get('dataset_sha256_canonical', 'non disponibile')}"
+    )
     print(f"Righe: {dataset['row_count']}; feature canoniche: {dataset['feature_count']}")
     for split_name in ("train", "validation"):
         row = counts[split_name]

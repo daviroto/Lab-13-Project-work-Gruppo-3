@@ -73,6 +73,7 @@
     "origin": "default",
     "origin_label": "copia assegnata nella cartella del progetto",
     "sha256": "afee41161484c561feb59576f464321f3f0453c00acb9752a9173a7755e97c79",
+    "sha256_canonical": "5c999d24a24126e81a033ae5ecf9b9b1049925f8abe59367883bcd171476c72f",
     "row_count": 1000,
     "header": [
       "record_id",

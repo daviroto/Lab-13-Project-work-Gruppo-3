@@ -81,6 +81,46 @@ Il contratto condiviso del laboratorio prevede 30 feature numeriche e target 0/1
 
 Provenienza: generazione sintetica del docente, seed 1303. Ogni soggetto usa gruppi di variabili correlate, effetti non lineari e target probabilistico con rumore, con vincoli di coerenza su contatori, picchi e totali; nessuna feature contiene la label o l'esito futuro osservato. Il seed documenta la preparazione: gli input assegnati restano i CSV distribuiti. Lo split non simula una validazione temporale; una prova su dati futuri reali richiederebbe una valutazione distinta.
 
+## Stato finale del progetto (S1-S6)
+
+Le fasi S1-S6 sono implementate. Lo stato finale della versione servita è
+**v1**; v2 è una candidata approvata dal gate S4 ma non attiva.
+
+| Elemento | Stato |
+| --- | --- |
+| Dati, contratto e audit | ✅ S1 |
+| Baseline v1, validation e MLflow | ✅ S2 |
+| Servizio FastAPI e telemetria | ✅ S3 |
+| Candidata v2, probe HTTP e gate | ✅ S4, decisione SUPERATO |
+| Transizioni, drill e rollback | ✅ S5-S6, stato finale v1 |
+| Container / deployment esterno | ❌ non eseguito |
+
+Risultati principali: accuracy v1 = v2 = 0.7350; precision classe 1 = 0.6742;
+recall classe 1 = 0.7143; p95 HTTP v2 = 28,3657 ms; error rate gate = 0/30.
+Drill: `200, 200, 200, 422`, error rate drill 1/4 = 0,25 (separato dal gate).
+
+Mappa completa delle evidenze e istruzioni di ripetizione:
+[`docs/consegna_finale.md`](docs/consegna_finale.md). Dettaglio delle modifiche
+della fase finale: [`docs/consegna_s4_s5.md`](docs/consegna_s4_s5.md). Traccia
+per la presentazione: [`docs/presentazione.md`](docs/presentazione.md).
+
+## Setup rapido
+
+Prerequisito: Python 3.11 o successivo (le misure S5-S6 sono state eseguite con
+Python 3.12.4). Dalla radice del progetto:
+
+```powershell
+python -m venv .venv
+.\.venv\Scripts\Activate.ps1
+python -m pip install -r requirements.txt
+python -m unittest discover -s tests -v
+```
+
+Per audit e test basta la libreria standard; per servizio e drill servono
+FastAPI, Uvicorn, NumPy, scikit-learn e joblib. MLflow serve solo per
+riallenare. Le versioni osservate e i limiti di compatibilità sono nella
+sezione [Ambiente](#ambiente) e in `requirements.txt`.
+
 ---
 
 # Implementazione del progetto - fase S1
@@ -89,10 +129,11 @@ Provenienza: generazione sintetica del docente, seed 1303. Ogni soggetto usa gru
 
 La fase S1 è implementata: struttura del progetto, configurazione dei percorsi,
 lettore e validatore del dataset, contratto dei payload, audit dei dati e
-documentazione di obiettivo/metriche/gate. **Non** sono ancora presenti servizio
-API, candidata v2, attivazione o rollback. Il gate è fissato ma non ancora
-misurato. La fase S2 (training ripetibile, valutazione e baseline v1 tracciata)
-è implementata e descritta nella sezione seguente.
+documentazione di obiettivo/metriche/gate. Al termine di questa fase **non**
+erano ancora presenti servizio API, candidata v2, attivazione o rollback; il
+gate era fissato ma non ancora misurato. La fase S2 (training ripetibile,
+valutazione e baseline v1 tracciata) è implementata e descritta nella sezione
+seguente.
 
 ## Come individuare i file assegnati
 
@@ -146,16 +187,23 @@ src/lab13/
   data.py                   # lettore, controlli e fingerprint SHA-256
   training.py               # pipeline baseline, fit sul train, metriche di validation
   model_io.py               # versionamento artefatti + caricatore con controlli
+  version_state.py          # stato attivo atomico + registro transizioni (S5)
   tracking.py               # run MLflow su store locale
 scripts/
   audit_data.py             # audit S1 e generazione dei report
   train_baseline.py         # training S2, valutazione, MLflow e versionamento
-  # S3-S6: nessun script di servizio, candidata, gate misurato, attivazione o drill
-tests/                      # test stdlib: contratti, dati, config, gate, training, artefatti
-models/                     # artefatti versionati: v1/ (S2)
-reports/                    # report di audit S1 e report di valutazione v1
-logs/                       # predisposta per i log delle fasi successive
-mlruns/                     # store MLflow locale (escluso da .gitignore)
+  train_candidate.py        # candidata v2 (S3-S4)
+  probe_service.py          # probe in-process e HTTP della candidata
+  evaluate_gate.py          # decisione del gate S4
+  switch_version.py         # attivazione/rollback offline (S5)
+  drill_rollback.py         # drill HTTP v1 -> v2 -> v1 (S6)
+tests/                      # test stdlib: contratti, dati, config, gate, training,
+                            # artefatti, servizio, stato versione e logica drill
+models/                     # artefatti versionati: v1/ (S2) e v2/ (S3-S4)
+reports/                    # audit, valutazioni, probe, gate e drill
+reports/drill/              # log richieste, registro transizioni e log server del drill
+logs/                       # log runtime locale (ignorato da git)
+mlruns/                     # store MLflow locale (ignorato da git)
 requirements.txt            # manifest delle dipendenze previste, senza pin
 ```
 
@@ -204,7 +252,8 @@ Il lettore non scrive mai il CSV: il fingerprint è calcolato sui byte letti e
 l'ordine delle righe è preservato. Lo split distribuito non viene rigenerato.
 
 - Dataset di lavoro: `.\dataset (1).csv`
-- SHA-256: `afee41161484c561feb59576f464321f3f0453c00acb9752a9173a7755e97c79`
+- SHA-256 dei byte: `afee41161484c561feb59576f464321f3f0453c00acb9752a9173a7755e97c79`
+- SHA-256 canonico (CRLF/LF normalizzati): `5c999d24a24126e81a033ae5ecf9b9b1049925f8abe59367883bcd171476c72f`
 - Report: `reports\data_audit.md` e `reports\data_audit.json`
 
 ## Contratto di inferenza
@@ -269,7 +318,7 @@ richiede NumPy, scikit-learn, joblib e MLflow.
 - La validation non è un test indipendente e lo split non simula una
   validazione temporale.
 - Le fasi successive (API, candidata, gate misurato, attivazione e rollback) non
-  sono implementate in queste fasi.
+  erano implementate al termine di questa fase.
 ---
 
 # Implementazione del progetto - fase S2
@@ -278,9 +327,10 @@ richiede NumPy, scikit-learn, joblib e MLflow.
 
 S2 è implementata: training ripetibile della baseline, valutazione sulla
 validation distribuita, tracciamento MLflow su store locale, artefatti
-versionati in `models/v1/` e report di valutazione. Non sono implementati: il
-servizio API (S3), la candidata v2 e il gate misurato (S4), le transizioni di
-versione e il drill (S5-S6). **v1 non è dichiarata pronta al deployment.**
+versionati in `models/v1/` e report di valutazione. Al termine di S2 non erano
+implementati: il servizio API (S3), la candidata v2 e il gate misurato (S4), le
+transizioni di versione e il drill (S5-S6). **v1 non è dichiarata pronta al
+deployment.**
 
 ## Comandi della fase S2
 
@@ -429,10 +479,17 @@ uvicorn lab13.service:app --app-dir src --host 127.0.0.1 --port 8000
 canonico. Risponde 422 prima del predict per payload non validi; il request ID
 è accettato tramite `X-Request-ID` oppure generato, e compare nel body/headers
 e nel log JSONL `logs/requests.jsonl`. I log non contengono il payload.
-`GET /health` espone versione, run ID e hash; `GET /metrics` restituisce una
-finestra mobile di 15 minuti sulle sole richieste `POST /predict`, con richieste,
-errori HTTP ≥400, error rate e p95. A zero richieste, error rate è 0 e p95 è
-`null`. Health e metrics non entrano nel conteggio.
+`GET /health` espone versione, run ID, hash dell'artefatto e fingerprint del
+dataset (raw e canonico); `GET /metrics` restituisce una finestra mobile di 15
+minuti sulle sole richieste `POST /predict`, con richieste, errori HTTP ≥400,
+error rate e p95. A zero richieste, error rate è 0 e p95 è `null`. Health e
+metrics non entrano nel conteggio.
+
+Per il solo drill locale S5-S6 il servizio espone `POST /admin/version`, attivo
+soltanto con `LAB13_ALLOW_VERSION_SWITCH=1`. L'endpoint verifica la versione
+richiesta (schema, fingerprint canonico e hash dell'artefatto) prima di cambiare
+stato e modello; `/health` riporta sempre il modello realmente caricato. Non è
+un endpoint di produzione ed è disabilitato per default.
 
 ## S4 - Candidata v2 e gate
 
@@ -443,12 +500,20 @@ Regression. Lo stesso CSV, gli stessi 800 ID train, i 200 ID validation,
 l'ordine feature e il seed restano invariati; la validation serve solo a
 valutare, senza tuning iterativo.
 
-Il CSV incluso ha SHA-256
-`5c999d24a24126e81a033ae5ecf9b9b1049925f8abe59367883bcd171476c72f`, ma gli
-artefatti v1 distribuiti dichiarano `afee41161484c561feb59576f464321f3f0453c00acb9752a9173a7755e97c79`.
-La differenza viene trattata come una discrepanza della consegna: v1 originale
-rimane intatta e il confronto S4 usa una baseline v1 isolata, ricreata sul CSV
-incluso, senza cambiare i dati o lo split.
+Lo stesso CSV può presentare due SHA-256 dei byte a seconda del checkout Git:
+`afee41161484c561feb59576f464321f3f0453c00acb9752a9173a7755e97c79` con line
+ending `CRLF` e `5c999d24a24126e81a033ae5ecf9b9b1049925f8abe59367883bcd171476c72f`
+con `LF`. Non è un dataset diverso: il contenuto logico è identico e lo
+SHA-256 **canonico** (line ending normalizzati a `LF`) è
+`5c999d24a24126e81a033ae5ecf9b9b1049925f8abe59367883bcd171476c72f` per
+entrambi. v1 e v2 riproducono esattamente le rispettive predizioni salvate sui
+200 ID di validation.
+
+Il gate S4 è stato misurato con una baseline v1 isolata riaddestrata sul CSV
+incluso e conserva quella decisione: v2 ha accuracy 0.735, uguale alla baseline,
+quindi il criterio `v2 ≥ v1` è rispettato. La v1 originale ha anch'essa accuracy
+0.735 e predizioni identiche; la decisione del gate non cambia. Le soglie di
+`config/gate.json` non sono state modificate.
 
 ```powershell
 python scripts/train_baseline.py --models-dir .\comparison_baseline\models --report-dir .\comparison_baseline\reports --tracking-uri .\comparison_baseline\mlruns
@@ -477,7 +542,115 @@ uvicorn lab13.service:app --app-dir src --host 127.0.0.1 --port 8000
 La configurazione di prova va rimossa al termine del probe. Non è un drill di
 attivazione/rollback: la configurazione canonica resta v1.
 
-## Limiti di S2-S4
+## S5-S6 - Transizioni, drill e consegna
+
+### Stato attivo e transizioni
+
+`config/active_version.json` è la fonte di verità per il serving. Contiene la
+versione attiva, la precedente, l'azione, la modalità (`normal`/`drill`), il
+timestamp, il run ID, lo SHA-256 dell'artefatto e il fingerprint canonico del
+dataset. La scrittura è **atomica** (file temporaneo nella stessa cartella +
+`os.replace`): il servizio non può leggere uno stato a metà.
+
+Ogni attivazione o rollback aggiunge una riga JSONL a
+`reports/drill/transitions.jsonl`, con timestamp, azione, modalità, prima/dopo,
+run ID e hash dell'artefatto. Il cambio a caldo nel servizio usa
+`POST /admin/version` (solo con `LAB13_ALLOW_VERSION_SWITCH=1`); il CLI
+`scripts/switch_version.py` gestisce lo stesso stato offline.
+
+Il gate S4 ha dato **SUPERATO** rispetto alla baseline isolata (accuracy 0.735 =
+0.735, p95 HTTP 28,4 ms, error rate 0/30). v2 è quindi una candidata accettata
+dal gate, ma viene attivata **solo nel drill locale** e non è un deployment di
+produzione. Lo stato finale è v1.
+
+### Comandi
+
+```powershell
+# Stato attivo e ultime transizioni
+python scripts/switch_version.py status
+
+# Cambio offline dello stato (richiede riavvio del server per servire davvero)
+python scripts/switch_version.py activate v2 --mode drill
+python scripts/switch_version.py rollback --mode drill
+
+# Drill completo: avvia uvicorn, esegue le 4 richieste, fa rollback e arresta
+python scripts/drill_rollback.py
+
+# Drill contro un server già avviato con il cambio versione abilitato
+$env:LAB13_ALLOW_VERSION_SWITCH = "1"
+uvicorn lab13.service:app --app-dir src --host 127.0.0.1 --port 8000
+python scripts/drill_rollback.py --base-url http://127.0.0.1:8000
+```
+
+### Esito del drill effettivamente eseguito
+
+| # | Request ID | Versione attesa | Status atteso | Status reale | Predizione | Versione servita |
+| ---: | --- | --- | ---: | ---: | ---: | --- |
+| 1 | `req_01` | v1 | 200 | 200 | 0 | v1 |
+| 2 | `req_02` | v2 | 200 | 200 | 1 | v2 |
+| 3 | `req_03` | v1 | 200 | 200 | 1 | v1 |
+| 4 | `req_04` | v1 incompleta (29 feature) | 422 | 422 | - | - |
+
+- Transizioni: `activate v1 -> v2`, poi `rollback v2 -> v1`.
+- Error rate del drill: **1/4 = 0,25** (3 risposte valide + 1 errore atteso).
+- Error rate sulle sole richieste valide del drill: 0/3 = 0,0.
+- Error rate del gate S4: 0/30 = 0,0. Il valore 0,25 del drill **non** sostituisce
+  la misura del gate.
+- Prova finale: `/health` riporta `v1`, run ID
+  `64079619c2c947bd83699d0d552b9d78`, artefatto
+  `f8aea6264329d4c53d1f87e270c10ef7a3567c739c59c5796ccf116ccb7e1bd7`, dataset
+  canonico `5c999d24a24126e81a033ae5ecf9b9b1049925f8abe59367883bcd171476c72f`.
+  Corrispondono ai metadati di `models/v1`.
+- `req_04` restituisce 422 dal normale contratto di validazione, prima del
+  predict; non è una risposta simulata.
+
+### Evidenze
+
+| Evidenza | Percorso |
+| --- | --- |
+| Report drill JSON/Markdown | `reports/drill_s5_s6.json`, `reports/drill_s5_s6.md` |
+| Registro transizioni | `reports/drill/transitions.jsonl` |
+| Log richieste del drill (senza payload) | `reports/drill/requests.jsonl` |
+| Estratto log correlato | `reports/drill/request_log_extract.jsonl` |
+| Log del server avviato dal drill | `reports/drill/server.log` |
+| Stato finale | `config/active_version.json` |
+| Consegna e mappa evidenze | `docs/consegna_finale.md` |
+| Traccia presentazione | `docs/presentazione.md` |
+| Coerenza fingerprint CRLF/LF | `reports/fingerprint_coerenza.md` |
+
+### Livelli realmente eseguiti
+
+| Livello | Stato | Nota |
+| --- | --- | --- |
+| In-process | ✅ eseguito | training, test, probe `pipeline.predict` |
+| HTTP locale | ✅ eseguito | probe HTTP v2 e drill v1 → v2 → v1 |
+| Container | ❌ non eseguito | nessun Docker o deployment esterno |
+
+### Cleanup
+
+- Il drill avviato senza `--base-url` arresta uvicorn al termine.
+- Se il server è avviato manualmente, fermarlo con `Ctrl+C` e verificare che la
+  porta 8000 non sia più in ascolto.
+- Rimuovere le variabili usate per la sessione:
+  `Remove-Item Env:LAB13_ALLOW_VERSION_SWITCH`,
+  `Remove-Item Env:LAB13_ACTIVE_VERSION_PATH`,
+  `Remove-Item Env:LAB13_TRANSITIONS_PATH`,
+  `Remove-Item Env:LAB13_REQUEST_LOG`.
+- Non eliminare `config/active_version.json`, `models/v1`, `models/v2`,
+  `reports/` e `reports/drill/`: sono evidenze della consegna.
+- Non sono stati creati container da rimuovere.
+
+### Ambiente
+
+Le misure S5-S6 sono state eseguite con Python 3.12.4, NumPy 2.4.5,
+scikit-learn 1.9.0 e joblib 1.5.3. Gli artefatti v1/v2 sono stati creati con
+Python 3.11.9, NumPy 2.4.6 e scikit-learn 1.8.0/1.9.1 (versioni registrate nei
+metadati). Il caricamento segnala `InconsistentVersionWarning`, ma le predizioni
+riprodotte coincidono con quelle salvate; nessun modello è stato riallenato.
+MLflow non è necessario per S5-S6 e non è installato nell'ambiente usato per il
+drill.
+
+## Limiti di S2-S6
 
 - I dati sono sintetici e didattici: le metriche non misurano spedizioni reali.
 - La validation assegnata non è un test indipendente e non simula una
@@ -491,7 +664,12 @@ attivazione/rollback: la configurazione canonica resta v1.
   dell'artefatto diverso. Il caricatore confronta l'hash dei metadati, quindi
   una rserializzazione in un ambiente diverso va rieseguita in una versione
   nuova invece di sostituire v1.
-- I risultati delle fasi S3-S4 dipendono dalle misure registrate nei report;
-  l'assenza della misura HTTP comparabile rende il gate bloccato.
-- L'API e il probe locale non costituiscono verifica di container o deployment.
-- v2 resta candidata e non attivata; il drill S5-S6 è fuori da questa fase.
+- Il gate S4 conserva la decisione registrata con la baseline isolata. Lo hash
+  canonico mostra che la v1 originale ha lo stesso contenuto e la stessa
+  accuracy, ma il report del gate non è stato riscritto dopo i risultati.
+- L'API, il probe e il drill locali non costituiscono verifica di container o
+  deployment esterno: quel livello è dichiarato “non eseguito”.
+- v2 resta una candidata: il drill S5-S6 la attiva solo localmente per la prova
+  di rollback e lascia lo stato finale su v1.
+- Il cambio versioni richiede `LAB13_ALLOW_VERSION_SWITCH=1` ed è pensato per
+  un ambiente locale; non va esposto in produzione.

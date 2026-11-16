@@ -1,7 +1,13 @@
 # Valutazione v1 - S2
 
 Generato (UTC): `2026-11-15T15:10:00+00:00`
-Stato: Baseline valutata sulla validation distribuita. Serving API, candidata v2, gate misurato, attivazione e rollback non sono implementati: v1 non è dichiarata pronta al deployment.
+Stato al momento del report (S2): Baseline valutata sulla validation distribuita. Serving API, candidata v2, gate misurato, attivazione e rollback non erano ancora implementati: v1 non era dichiarata pronta al deployment.
+
+> **Nota successiva (S5-S6):** questa è la baseline isolata usata dal gate S4.
+> Il report è la fotografia della fase S2 e non è stato ricalcolato. Le fasi
+> S3-S6 sono state completate; v2 è stata attivata solo nel drill locale e lo
+> stato finale è v1. Vedi `docs/consegna_s4_s5.md`,
+> `docs/consegna_finale.md` e `reports/drill_s5_s6.md`.
 
 ## Run MLflow
 
@@ -67,4 +73,4 @@ Una seconda esecuzione sulla stessa versione termina con errore esplicito e non 
 - Dati interamente sintetici: le metriche non misurano spedizioni reali.
 - La validation assegnata non è un test indipendente.
 - Il gate (config/gate.json) non è misurato in S2: mancano servizio, candidata, p95 ed error rate.
-- v1 non è attivata: S3-S6 non sono implementate.
+- Al momento del report v1 non era attivata e S3-S6 non erano implementate.

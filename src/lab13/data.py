@@ -7,6 +7,11 @@ Il lettore separa in modo esplicito:
 
 Il file viene letto una sola volta in modalità binaria: i byte originali sono
 usati per il fingerprint SHA-256 e non vengono mai riscritti.
+
+Accanto allo SHA-256 dei byte raw viene calcolato uno SHA-256 *canonico* sui
+byte con line ending normalizzati a ``\\n``. Serve a riconoscere lo stesso CSV
+quando il checkout Git cambia ``CRLF``/``LF``: il contenuto logico resta lo
+stesso e gli artefatti restano confrontabili senza rigenerare modelli o dati.
 """
 
 from __future__ import annotations
@@ -87,6 +92,7 @@ class LoadedDataset:
 
     source: Path
     sha256: str
+    sha256_canonical: str
     header: tuple[str, ...]
     feature_names: tuple[str, ...]
     rows: tuple[DatasetRow, ...]
@@ -141,10 +147,31 @@ def sha256_bytes(data: bytes) -> str:
     return hashlib.sha256(data).hexdigest()
 
 
+def canonicalize_newlines(data: bytes) -> bytes:
+    """Normalizza i line ending ``CRLF`` a ``LF`` senza toccare il resto."""
+
+    return data.replace(b"\r\n", b"\n")
+
+
+def sha256_canonical_bytes(data: bytes) -> str:
+    """SHA-256 del contenuto con line ending normalizzati.
+
+    Due checkout dello stesso CSV (uno ``CRLF`` su Windows, uno ``LF`` su
+    Linux) producono lo stesso hash canonico.
+    """
+
+    return hashlib.sha256(canonicalize_newlines(data)).hexdigest()
+
+
 def sha256_file(path: str | Path) -> str:
     source = Path(path).expanduser()
     with source.open("rb") as handle:
         return hashlib.file_digest(handle, "sha256").hexdigest()
+
+
+def sha256_canonical_file(path: str | Path) -> str:
+    source = Path(path).expanduser()
+    return sha256_canonical_bytes(source.read_bytes())
 
 
 def _fail(
@@ -253,6 +280,7 @@ def load_dataset(
         )
 
     fingerprint = sha256_bytes(raw)
+    canonical_fingerprint = sha256_canonical_bytes(raw)
     try:
         text = raw.decode("utf-8-sig")
     except UnicodeDecodeError as exc:
@@ -405,6 +433,7 @@ def load_dataset(
     return LoadedDataset(
         source=source,
         sha256=fingerprint,
+        sha256_canonical=canonical_fingerprint,
         header=header,
         feature_names=FEATURE_NAMES,
         rows=tuple(rows),
@@ -417,6 +446,7 @@ def dataset_audit_dict(dataset: LoadedDataset) -> dict[str, Any]:
     return {
         "dataset_path": str(dataset.source),
         "dataset_sha256": dataset.sha256,
+        "dataset_sha256_canonical": dataset.sha256_canonical,
         "row_count": len(dataset),
         "feature_count": len(dataset.feature_names),
         "feature_names": list(dataset.feature_names),

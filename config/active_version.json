@@ -1,4 +1,12 @@
 {
+  "schema_version": 1,
   "version": "v1",
-  "note": "Versione iniziale configurata per il serving S3; la candidata v2 non viene attivata."
+  "previous_version": "v2",
+  "action": "rollback",
+  "mode": "drill",
+  "updated_at": "2026-11-16T00:25:08+00:00",
+  "run_id": "64079619c2c947bd83699d0d552b9d78",
+  "artifact_sha256": "f8aea6264329d4c53d1f87e270c10ef7a3567c739c59c5796ccf116ccb7e1bd7",
+  "dataset_sha256_canonical": "5c999d24a24126e81a033ae5ecf9b9b1049925f8abe59367883bcd171476c72f",
+  "source": "service-admin"
 }
