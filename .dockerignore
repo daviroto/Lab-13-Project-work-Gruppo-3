@@ -1,0 +1,23 @@
+# Contesto di build minimo: solo sorgenti, configurazione, modelli e dataset.
+.git
+.gitignore
+.venv
+venv
+__pycache__
+*.py[cod]
+.pytest_cache
+.mypy_cache
+.ruff_cache
+
+# Non servono al serving e non devono entrare nell'immagine.
+mlruns
+logs
+reports
+comparison_baseline
+docs
+prompts
+tests
+
+# File di sviluppo: il serving usa requirements-serving.txt.
+requirements.txt
+README.md

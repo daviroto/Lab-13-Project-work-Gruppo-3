@@ -96,6 +96,21 @@
 - Dimostrazione: `python scripts/drill_rollback.py`, poi
   `python scripts/switch_version.py status`.
 
+## 7-bis. Deploy Docker
+
+- Immagine `lab13-progetto3-api:local` da `python:3.11.9-slim`, dipendenze
+  pinnate in `requirements-serving.txt` (senza MLflow).
+- Container non-root (`lab13`, uid 10001), root read-only, `cap_drop: ALL`,
+  `no-new-privileges`, healthcheck su `/health`, porta solo su `127.0.0.1`.
+- Dataset, config e modelli sono dentro l'immagine: il fingerprint canonico e
+  l'hash dell'artefatto sono verificati all'avvio.
+- Smoke test: `python scripts/docker_smoke_test.py`; richieste
+  `200, 200, 200, 422`, v1 servita, 22 controlli su 22, p95 2,92 ms.
+- `req_02` resta v1 nel deployment; il cambio a v2 appartiene solo al drill
+  locale S5-S6. Il p95 dello smoke test non sostituisce il gate S4.
+- Evidenze: `reports/docker_deploy.json`, `reports/docker_deploy.md`,
+  `reports/docker/`; istruzioni in `docs/deploy_docker.md`.
+
 ## 8. Limiti
 
 - Dati sintetici: nessuna generalizzazione a spedizioni reali.
@@ -103,9 +118,11 @@
 - Baseline lineare, parametri fissati a priori, nessuna ricerca di
   iperparametri.
 - Gate misurato con baseline isolata; decisione non riscritta.
-- Drill locale, non deployment; container dichiarato “non eseguito”.
-- Warning di versione scikit-learn nel caricamento degli artefatti, con
-  predizioni riprodotte identiche.
+- Drill locale, non deployment di produzione; container Docker verificato
+  localmente, non su cloud o registry esterno.
+- Smoke test Docker senza TLS/autenticazione e senza prova di carico.
+- Warning di versione scikit-learn nel caricamento degli artefatti locali, con
+  predizioni riprodotte identiche; nel container le versioni coincidono.
 
 ## 9. Contributi dei componenti
 
@@ -121,8 +138,9 @@ Compilare con i nomi effettivi del gruppo:
 ## 10. Chiusura
 
 - Ripetere: audit → test → training (solo se necessario) → probe → gate →
-  drill → verifica stato v1.
+  drill → verifica stato v1 → build Docker → smoke test container.
 - Stato finale: v1 attiva; v2 candidata approvata dal gate, attivata solo nel
-  drill locale.
+  drill locale; deployment Docker locale su v1.
 - Materiali di supporto: `docs/consegna_finale.md`,
-  `docs/consegna_s4_s5.md`, `reports/drill_s5_s6.md`.
+  `docs/consegna_s4_s5.md`, `docs/deploy_docker.md`,
+  `reports/drill_s5_s6.md`, `reports/docker_deploy.md`.

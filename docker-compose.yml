@@ -1,0 +1,56 @@
+# Deploy locale del servizio su Docker.
+#
+# Uso:
+#   docker compose build
+#   docker compose up -d
+#   docker compose ps
+#   docker compose down -v
+#
+# La porta è configurabile senza modificare il file:
+#   $env:LAB13_DOCKER_PORT = "8001"; docker compose up -d
+#
+# Il container serve la versione indicata in config/active_version.json (v1).
+# L'endpoint /admin/version resta disabilitato: LAB13_ALLOW_VERSION_SWITCH=0.
+# Il cambio versione e il drill v1 -> v2 -> v1 restano operazioni locali
+# documentate in README, non un privilegio del deployment.
+
+name: lab13-progetto3
+
+services:
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: lab13-progetto3-api:local
+    container_name: lab13-progetto3-api
+    ports:
+      - "127.0.0.1:${LAB13_DOCKER_PORT:-8000}:8000"
+    environment:
+      LAB13_DATASET_PATH: "/app/dataset (1).csv"
+      LAB13_REQUEST_LOG: "/app/logs/requests.jsonl"
+      LAB13_ALLOW_VERSION_SWITCH: "0"
+    volumes:
+      - lab13_logs:/app/logs
+    read_only: true
+    tmpfs:
+      - /tmp:size=32m,mode=1777
+    security_opt:
+      - no-new-privileges:true
+    cap_drop:
+      - ALL
+    restart: unless-stopped
+    stop_grace_period: 10s
+    healthcheck:
+      test:
+        - CMD
+        - python
+        - -c
+        - "import json,urllib.request; raise SystemExit(0 if json.load(urllib.request.urlopen('http://127.0.0.1:8000/health', timeout=4)).get('status') == 'ok' else 1)"
+      interval: 30s
+      timeout: 5s
+      start_period: 20s
+      retries: 3
+
+volumes:
+  lab13_logs:
+    name: lab13-progetto3-logs

@@ -1,0 +1,34 @@
+# Dipendenze minime e pinnate per l'immagine Docker di serving.
+#
+# Questo file NON sostituisce requirements.txt: il manifest del laboratorio
+# resta senza pin. Qui sono fissate soltanto le versioni necessarie a caricare
+# gli artefatti versionati e a servire l'API, così l'immagine è riproducibile.
+#
+# Coerenza con i metadati degli artefatti (models/v1, models/v2):
+#   python 3.11.9, numpy 2.4.6, scikit-learn 1.8.0, joblib 1.5.3
+# La base Docker è python:3.11.9-slim, quindi il joblib non emette il warning
+# di versione diversa osservato negli ambienti con Python 3.12.
+#
+# MLflow non è incluso: serve solo per riallenare/tracciare, non per servire.
+# Le versioni di FastAPI/Uvicorn/Pydantic sono quelle osservate nell'ambiente
+# del laboratorio; non influenzano le predizioni del modello.
+
+numpy==2.4.6
+scipy==1.17.1
+scikit-learn==1.8.0
+joblib==1.5.3
+threadpoolctl==3.6.0
+
+fastapi==0.115.6
+starlette==0.41.3
+pydantic==2.14.3
+pydantic-core==2.50.4
+annotated-types==0.8.0
+typing-extensions==4.16.0
+typing-inspection==0.4.5
+anyio==4.16.0
+idna==3.20
+
+uvicorn==0.34.0
+click==8.5.1
+h11==0.16.0

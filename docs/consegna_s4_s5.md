@@ -5,6 +5,12 @@ progetto (S5-S6) rispetto allo stato consegnato in S3-S4. Il nome del file è
 quello richiesto (`consegna_s4_s5.md`); per comodità qui la fase è indicata come
 S5-S6, cioè transizioni di versione, drill locale e consegna.
 
+> **Nota successiva (livello container).** Al momento di S5-S6 nessun container
+> era stato eseguito. Il deploy Docker locale è stato aggiunto ed eseguito
+> successivamente; comandi, risultati ed evidenze sono in
+> `docs/deploy_docker.md`, `reports/docker_deploy.md` e `reports/docker/`.
+> Le affermazioni storiche di questo documento restano riferite a S5-S6.
+
 ## Esito sintetico
 
 La fase finale è completa. Il drill locale ha eseguito la sequenza
@@ -23,8 +29,8 @@ attivo su **v1**.
 | Error rate sole richieste valide | `0/3 = 0,0` |
 | Error rate gate S4 | `0/30 = 0,0` (misura separata, invariata) |
 | Stato finale | `v1`, run `64079619c2c947bd83699d0d552b9d78` |
-| Test automatici | 100 test superati |
-| Container / deployment esterno | non eseguito, dichiarato esplicitamente |
+| Test automatici | 100 test superati in S5-S6; 114 dopo l'aggiunta dei test Docker |
+| Container / deployment esterno | non eseguito in S5-S6; livello Docker aggiunto successivamente |
 
 ## Checklist dei punti della consegna
 
@@ -115,7 +121,8 @@ attivo su **v1**.
 - Metadati `models/v1`: stessi run ID, hash artefatto e fingerprint canonico
   `5c999d24a24126e81a033ae5ecf9b9b1049925f8abe59367883bcd171476c72f`.
 - `req_03`, inviata dopo il rollback, è valida e servita da v1 con status 200.
-- La suite completa esegue 100 test senza errori.
+- In S5-S6 la suite completa eseguiva 100 test senza errori; dopo l'aggiunta
+  dei test Docker ne esegue 114.
 
 ## Comandi di verifica
 
@@ -151,7 +158,9 @@ python scripts/drill_rollback.py --base-url http://127.0.0.1:8000
   stato riscritto dopo il drill.
 - Il cambio versione è locale e richiede `LAB13_ALLOW_VERSION_SWITCH=1`; non è
   un endpoint di produzione.
-- **Container / deployment esterno: non eseguito.**
+- **Container / deployment esterno: non eseguito in S5-S6.** Il deploy Docker
+  locale è stato aggiunto successivamente ed è documentato in
+  `docs/deploy_docker.md`.
 - La tabella dei contributi in `docs/presentazione.md` contiene ancora i
   segnaposto dei nomi: vanno compilati a cura del gruppo.
 
@@ -165,8 +174,9 @@ python scripts/drill_rollback.py --base-url http://127.0.0.1:8000
   `LAB13_TRANSITIONS_PATH`, `LAB13_REQUEST_LOG`.
 - Non eliminare `models/`, `reports/`, `reports/drill/` e
   `config/active_version.json`: sono artefatti ed evidenze.
-- Nessun container è stato creato, quindi non c'è nulla da rimuovere a quel
-  livello.
+- In S5-S6 nessun container era stato creato. Il container Docker successivo si
+  ferma e si rimuove con `docker compose down -v`; lo smoke test lo fa già al
+  termine, salvo `--keep-running`.
 
 ## Riferimenti
 

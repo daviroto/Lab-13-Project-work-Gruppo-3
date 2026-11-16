@@ -1,0 +1,113 @@
+{
+  "Id": "sha256:f96becea9ac1621b72d3817db604bed27f5a4790c26fa3b00f77c1acdaff0684",
+  "RepoTags": [
+    "lab13-progetto3-api:local"
+  ],
+  "RepoDigests": [
+    "lab13-progetto3-api@sha256:f96becea9ac1621b72d3817db604bed27f5a4790c26fa3b00f77c1acdaff0684"
+  ],
+  "Comment": "buildkit.dockerfile.v0",
+  "Created": "2026-11-16T11:40:13.485063846Z",
+  "Config": {
+    "User": "lab13",
+    "ExposedPorts": {
+      "8000/tcp": {}
+    },
+    "Env": [
+      "PATH=/usr/local/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin",
+      "LANG=C.UTF-8",
+      "GPG_KEY=A035C8C19219BA821ECEA86B64E628F8D684696D",
+      "PYTHON_VERSION=3.11.9",
+      "PYTHON_PIP_VERSION=24.0",
+      "PYTHON_SETUPTOOLS_VERSION=65.5.1",
+      "PYTHON_GET_PIP_URL=https://github.com/pypa/get-pip/raw/def4aec84b261b939137dd1c69eff0aabb4a7bf4/public/get-pip.py",
+      "PYTHON_GET_PIP_SHA256=bc37786ec99618416cc0a0ca32833da447f4d91ab51d2c138dd15b7af21e8e9a",
+      "PYTHONDONTWRITEBYTECODE=1",
+      "PYTHONUNBUFFERED=1",
+      "PYTHONPATH=/app/src",
+      "PIP_DISABLE_PIP_VERSION_CHECK=1",
+      "PIP_NO_CACHE_DIR=1",
+      "XDG_CACHE_HOME=/tmp/.cache",
+      "LAB13_DATASET_PATH=/app/dataset (1).csv",
+      "LAB13_REQUESTS_PATH=/app/richieste_monitoraggio.csv",
+      "LAB13_REQUEST_LOG=/app/logs/requests.jsonl",
+      "LAB13_ALLOW_VERSION_SWITCH=0"
+    ],
+    "Cmd": [
+      "python",
+      "-m",
+      "uvicorn",
+      "lab13.service:app",
+      "--app-dir",
+      "/app/src",
+      "--host",
+      "0.0.0.0",
+      "--port",
+      "8000",
+      "--no-access-log",
+      "--log-level",
+      "warning"
+    ],
+    "WorkingDir": "/app",
+    "Labels": {
+      "com.docker.compose.project": "lab13-progetto3",
+      "com.docker.compose.service": "api",
+      "com.docker.compose.version": "5.2.0",
+      "lab13.model.version": "v1",
+      "lab13.project": "progetto3-ritardi-consegne",
+      "org.opencontainers.image.base.name": "docker.io/library/python:3.11.9-slim",
+      "org.opencontainers.image.description": "Servizio FastAPI per la previsione dei ritardi nelle consegne logistiche (dati sintetici didattici).",
+      "org.opencontainers.image.title": "Lab 13 - Progetto 3 - API ritardi consegne",
+      "org.opencontainers.image.version": "v1"
+    },
+    "ArgsEscaped": true,
+    "Healthcheck": {
+      "Test": [
+        "CMD-SHELL",
+        "python -c \"import json,urllib.request; d=json.load(urllib.request.urlopen('http://127.0.0.1:8000/health', timeout=4)); raise SystemExit(0 if d.get('status') == 'ok' else 1)\""
+      ],
+      "Interval": 30000000000,
+      "Timeout": 5000000000,
+      "StartPeriod": 20000000000,
+      "Retries": 3
+    }
+  },
+  "Architecture": "amd64",
+  "Os": "linux",
+  "Size": 135395158,
+  "RootFS": {
+    "Type": "layers",
+    "Layers": [
+      "sha256:8e2ab394fabf557b00041a8f080b10b4e91c7027b7c174f095332c7ebb6501cb",
+      "sha256:fbc55748732d0123d94fc4db6b7a810df835cc38db45a6ad1088d41f4cb2ef40",
+      "sha256:cadfff4b36cfd18d3a844aad4bc14f304c6baad6ad1f52cec0a99ee167915833",
+      "sha256:5c7e24e4a88ec3b59fd307e1d386b482be12334f7b53b06575a10d7b0a549669",
+      "sha256:7cb94502409a1280e22fcd64bb6570e5e4fc332725a928c96477994393be09db",
+      "sha256:98e7e5ab2ef976bd53324d9a19be419e0a3b3345b4d81796f641f5ffb03257b9",
+      "sha256:5808e074d48e678faf467cb1b098305bd48e6e44b4a5c0afd4483b841f2632f6",
+      "sha256:0ea519732dc659149af9f278dda9a3bba7c7f996ab3657733059b0edc03b0ddb",
+      "sha256:e563ced8b9007eea07f76e6851a0369f65e23afcc1ab03074ccbfebf00057bcc",
+      "sha256:dda5372203d38057ac903a43c61a72b8ed21f401dcdb319507bf90eef7c4d3f8",
+      "sha256:ad759cd7184acefeee228b9bc04db9433baa848f1fc1ac5650bc78cc7226b2de",
+      "sha256:6bc8291d143ee4136d2409ae0482f9c278b2672ab692559dd0c81e0249089f26",
+      "sha256:c58b786f476f75938f98dba887b517ed42b5d9ebe98f7e77f5e4a657b284a9b3",
+      "sha256:42f42293963f15aed80e8cb97c8bac712da1231f6801147d6aa19db25c56e507"
+    ]
+  },
+  "Metadata": {
+    "LastTagTime": "2026-11-16T11:45:30.729757368Z"
+  },
+  "Descriptor": {
+    "mediaType": "application/vnd.oci.image.index.v1+json",
+    "digest": "sha256:f96becea9ac1621b72d3817db604bed27f5a4790c26fa3b00f77c1acdaff0684",
+    "size": 856
+  },
+  "Identity": {
+    "Build": [
+      {
+        "Ref": "i98wcblbfhozhcrxa0r36eylw",
+        "CreatedAt": "2026-11-16T11:45:30.811897732Z"
+      }
+    ]
+  }
+}

@@ -1,0 +1,316 @@
+{
+  "Id": "eddf7acc224cdeb62d34f8743c4b6519accd15d40278347ab1fe98b5a97280f5",
+  "Created": "2026-11-16T11:45:32.828800095Z",
+  "Path": "python",
+  "Args": [
+    "-m",
+    "uvicorn",
+    "lab13.service:app",
+    "--app-dir",
+    "/app/src",
+    "--host",
+    "0.0.0.0",
+    "--port",
+    "8000",
+    "--no-access-log",
+    "--log-level",
+    "warning"
+  ],
+  "State": {
+    "Status": "running",
+    "Running": true,
+    "Paused": false,
+    "Restarting": false,
+    "OOMKilled": false,
+    "Dead": false,
+    "Pid": 2318,
+    "ExitCode": 0,
+    "Error": "",
+    "StartedAt": "2026-11-16T11:45:33.483573036Z",
+    "FinishedAt": "0001-01-01T00:00:00Z",
+    "Health": {
+      "Status": "healthy",
+      "FailingStreak": 0,
+      "Log": [
+        {
+          "Start": "2026-11-16T11:45:39.230252669Z",
+          "End": "2026-11-16T11:45:39.823557272Z",
+          "ExitCode": 0,
+          "Output": ""
+        }
+      ]
+    }
+  },
+  "Image": "sha256:f96becea9ac1621b72d3817db604bed27f5a4790c26fa3b00f77c1acdaff0684",
+  "ResolvConfPath": "/var/lib/docker/containers/eddf7acc224cdeb62d34f8743c4b6519accd15d40278347ab1fe98b5a97280f5/resolv.conf",
+  "HostnamePath": "/var/lib/docker/containers/eddf7acc224cdeb62d34f8743c4b6519accd15d40278347ab1fe98b5a97280f5/hostname",
+  "HostsPath": "/var/lib/docker/containers/eddf7acc224cdeb62d34f8743c4b6519accd15d40278347ab1fe98b5a97280f5/hosts",
+  "LogPath": "/var/lib/docker/containers/eddf7acc224cdeb62d34f8743c4b6519accd15d40278347ab1fe98b5a97280f5/eddf7acc224cdeb62d34f8743c4b6519accd15d40278347ab1fe98b5a97280f5-json.log",
+  "Name": "/lab13-progetto3-api",
+  "RestartCount": 0,
+  "Driver": "overlayfs",
+  "Platform": "linux",
+  "MountLabel": "",
+  "ProcessLabel": "",
+  "AppArmorProfile": "",
+  "ExecIDs": null,
+  "HostConfig": {
+    "Binds": [
+      "lab13-progetto3-logs:/app/logs:rw"
+    ],
+    "ContainerIDFile": "",
+    "LogConfig": {
+      "Type": "json-file",
+      "Config": {}
+    },
+    "NetworkMode": "lab13-progetto3_default",
+    "PortBindings": {
+      "8000/tcp": [
+        {
+          "HostIp": "127.0.0.1",
+          "HostPort": "8000"
+        }
+      ]
+    },
+    "RestartPolicy": {
+      "Name": "unless-stopped",
+      "MaximumRetryCount": 0
+    },
+    "AutoRemove": false,
+    "VolumeDriver": "",
+    "VolumesFrom": null,
+    "ConsoleSize": [
+      0,
+      0
+    ],
+    "CapAdd": null,
+    "CapDrop": [
+      "ALL"
+    ],
+    "CgroupnsMode": "host",
+    "Dns": null,
+    "DnsOptions": null,
+    "DnsSearch": null,
+    "ExtraHosts": [],
+    "GroupAdd": null,
+    "IpcMode": "private",
+    "Cgroup": "",
+    "Links": null,
+    "OomScoreAdj": 0,
+    "PidMode": "",
+    "Privileged": false,
+    "PublishAllPorts": false,
+    "ReadonlyRootfs": true,
+    "SecurityOpt": [
+      "no-new-privileges:true"
+    ],
+    "Tmpfs": {
+      "/tmp": "size=32m,mode=1777"
+    },
+    "UTSMode": "",
+    "UsernsMode": "",
+    "ShmSize": 67108864,
+    "Runtime": "runc",
+    "Isolation": "",
+    "CpuShares": 0,
+    "Memory": 0,
+    "NanoCpus": 0,
+    "CgroupParent": "",
+    "BlkioWeight": 0,
+    "BlkioWeightDevice": null,
+    "BlkioDeviceReadBps": null,
+    "BlkioDeviceWriteBps": null,
+    "BlkioDeviceReadIOps": null,
+    "BlkioDeviceWriteIOps": null,
+    "CpuPeriod": 0,
+    "CpuQuota": 0,
+    "CpuRealtimePeriod": 0,
+    "CpuRealtimeRuntime": 0,
+    "CpusetCpus": "",
+    "CpusetMems": "",
+    "Devices": null,
+    "DeviceCgroupRules": null,
+    "DeviceRequests": null,
+    "MemoryReservation": 0,
+    "MemorySwap": 0,
+    "MemorySwappiness": null,
+    "OomKillDisable": false,
+    "PidsLimit": null,
+    "Ulimits": null,
+    "CpuCount": 0,
+    "CpuPercent": 0,
+    "IOMaximumIOps": 0,
+    "IOMaximumBandwidth": 0,
+    "MaskedPaths": [
+      "/proc/acpi",
+      "/proc/asound",
+      "/proc/interrupts",
+      "/proc/kcore",
+      "/proc/keys",
+      "/proc/latency_stats",
+      "/proc/sched_debug",
+      "/proc/scsi",
+      "/proc/timer_list",
+      "/proc/timer_stats",
+      "/sys/devices/virtual/powercap",
+      "/sys/firmware"
+    ],
+    "ReadonlyPaths": [
+      "/proc/bus",
+      "/proc/fs",
+      "/proc/irq",
+      "/proc/sys",
+      "/proc/sysrq-trigger"
+    ]
+  },
+  "Storage": {
+    "RootFS": {
+      "Snapshot": {
+        "Name": "overlayfs"
+      }
+    }
+  },
+  "Mounts": [
+    {
+      "Type": "volume",
+      "Name": "lab13-progetto3-logs",
+      "Source": "/var/lib/docker/volumes/lab13-progetto3-logs/_data",
+      "Destination": "/app/logs",
+      "Driver": "local",
+      "Mode": "rw",
+      "RW": true,
+      "Propagation": ""
+    }
+  ],
+  "Config": {
+    "Hostname": "eddf7acc224c",
+    "Domainname": "",
+    "User": "lab13",
+    "AttachStdin": false,
+    "AttachStdout": true,
+    "AttachStderr": true,
+    "ExposedPorts": {
+      "8000/tcp": {}
+    },
+    "Tty": false,
+    "OpenStdin": false,
+    "StdinOnce": false,
+    "Env": [
+      "LAB13_REQUEST_LOG=/app/logs/requests.jsonl",
+      "LAB13_ALLOW_VERSION_SWITCH=0",
+      "LAB13_DATASET_PATH=/app/dataset (1).csv",
+      "PATH=/usr/local/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin",
+      "LANG=C.UTF-8",
+      "GPG_KEY=A035C8C19219BA821ECEA86B64E628F8D684696D",
+      "PYTHON_VERSION=3.11.9",
+      "PYTHON_PIP_VERSION=24.0",
+      "PYTHON_SETUPTOOLS_VERSION=65.5.1",
+      "PYTHON_GET_PIP_URL=https://github.com/pypa/get-pip/raw/def4aec84b261b939137dd1c69eff0aabb4a7bf4/public/get-pip.py",
+      "PYTHON_GET_PIP_SHA256=bc37786ec99618416cc0a0ca32833da447f4d91ab51d2c138dd15b7af21e8e9a",
+      "PYTHONDONTWRITEBYTECODE=1",
+      "PYTHONUNBUFFERED=1",
+      "PYTHONPATH=/app/src",
+      "PIP_DISABLE_PIP_VERSION_CHECK=1",
+      "PIP_NO_CACHE_DIR=1",
+      "XDG_CACHE_HOME=/tmp/.cache",
+      "LAB13_REQUESTS_PATH=/app/richieste_monitoraggio.csv"
+    ],
+    "Cmd": [
+      "python",
+      "-m",
+      "uvicorn",
+      "lab13.service:app",
+      "--app-dir",
+      "/app/src",
+      "--host",
+      "0.0.0.0",
+      "--port",
+      "8000",
+      "--no-access-log",
+      "--log-level",
+      "warning"
+    ],
+    "Healthcheck": {
+      "Test": [
+        "CMD",
+        "python",
+        "-c",
+        "import json,urllib.request; raise SystemExit(0 if json.load(urllib.request.urlopen('http://127.0.0.1:8000/health', timeout=4)).get('status') == 'ok' else 1)"
+      ],
+      "Interval": 30000000000,
+      "Timeout": 5000000000,
+      "StartPeriod": 20000000000,
+      "Retries": 3
+    },
+    "Image": "lab13-progetto3-api:local",
+    "Volumes": null,
+    "WorkingDir": "/app",
+    "Entrypoint": null,
+    "Labels": {
+      "com.docker.compose.config-hash": "3fdf8abc2582efa5889d3a02bcf2d1a27a77fa2d8edbd3e7e528f41f0f0351ea",
+      "com.docker.compose.container-number": "1",
+      "com.docker.compose.depends_on": "",
+      "com.docker.compose.image": "sha256:f96becea9ac1621b72d3817db604bed27f5a4790c26fa3b00f77c1acdaff0684",
+      "com.docker.compose.oneoff": "False",
+      "com.docker.compose.project": "lab13-progetto3",
+      "com.docker.compose.project.config_files": "C:\\Users\\stefa\\Desktop\\mio_plugin\\workspace\\ModelOps_ML\\Lab-13-Project-work-Gruppo-3\\docker-compose.yml",
+      "com.docker.compose.project.working_dir": "C:\\Users\\stefa\\Desktop\\mio_plugin\\workspace\\ModelOps_ML\\Lab-13-Project-work-Gruppo-3",
+      "com.docker.compose.service": "api",
+      "com.docker.compose.version": "5.2.0",
+      "lab13.model.version": "v1",
+      "lab13.project": "progetto3-ritardi-consegne",
+      "org.opencontainers.image.base.name": "docker.io/library/python:3.11.9-slim",
+      "org.opencontainers.image.description": "Servizio FastAPI per la previsione dei ritardi nelle consegne logistiche (dati sintetici didattici).",
+      "org.opencontainers.image.title": "Lab 13 - Progetto 3 - API ritardi consegne",
+      "org.opencontainers.image.version": "v1"
+    },
+    "StopTimeout": 10
+  },
+  "NetworkSettings": {
+    "SandboxID": "6725968bce64d79e5fdb94ff29ad6abeda48e01d10784c7ea42532543f008bce",
+    "SandboxKey": "/var/run/docker/netns/6725968bce64",
+    "Ports": {
+      "8000/tcp": [
+        {
+          "HostIp": "127.0.0.1",
+          "HostPort": "8000"
+        }
+      ]
+    },
+    "Networks": {
+      "lab13-progetto3_default": {
+        "IPAMConfig": null,
+        "Links": null,
+        "Aliases": [
+          "lab13-progetto3-api",
+          "api"
+        ],
+        "DriverOpts": null,
+        "GwPriority": 0,
+        "NetworkID": "40a60e3cbfd3cfff1384308f20aa7762ab5d8f52b3f0e3eeafa0c3fcd7d41824",
+        "EndpointID": "d3dddab012da545fd2f1b3a3ba0cb88d6622a5cacd8c2bfdf2d358ec8ed6b4d3",
+        "Gateway": "172.18.0.1",
+        "IPAddress": "172.18.0.2",
+        "MacAddress": "de:ba:ac:31:8e:59",
+        "IPPrefixLen": 16,
+        "IPv6Gateway": "",
+        "GlobalIPv6Address": "",
+        "GlobalIPv6PrefixLen": 0,
+        "DNSNames": [
+          "lab13-progetto3-api",
+          "api",
+          "eddf7acc224c"
+        ]
+      }
+    }
+  },
+  "ImageManifestDescriptor": {
+    "mediaType": "application/vnd.oci.image.manifest.v1+json",
+    "digest": "sha256:7bde92730dfc8b431c642a05292e9acb9dcdf7a5be00b7bc08be15e8415d0ee0",
+    "size": 2952,
+    "platform": {
+      "architecture": "amd64",
+      "os": "linux"
+    }
+  }
+}

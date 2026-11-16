@@ -27,3 +27,5 @@ httpx
 uvicorn
 
 # Docker è facoltativo e non è un pacchetto Python: non compare qui.
+# L'immagine di serving usa il manifest separato requirements-serving.txt, con
+# versioni pinnate e senza mlflow: non modifica questo manifest didattico.

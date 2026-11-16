@@ -81,10 +81,11 @@ Il contratto condiviso del laboratorio prevede 30 feature numeriche e target 0/1
 
 Provenienza: generazione sintetica del docente, seed 1303. Ogni soggetto usa gruppi di variabili correlate, effetti non lineari e target probabilistico con rumore, con vincoli di coerenza su contatori, picchi e totali; nessuna feature contiene la label o l'esito futuro osservato. Il seed documenta la preparazione: gli input assegnati restano i CSV distribuiti. Lo split non simula una validazione temporale; una prova su dati futuri reali richiederebbe una valutazione distinta.
 
-## Stato finale del progetto (S1-S6)
+## Stato finale del progetto (S1-S6 + deploy Docker)
 
 Le fasi S1-S6 sono implementate. Lo stato finale della versione servita è
-**v1**; v2 è una candidata approvata dal gate S4 ma non attiva.
+**v1**; v2 è una candidata approvata dal gate S4 ma non attiva. Il livello
+container è stato aggiunto ed eseguito localmente con Docker.
 
 | Elemento | Stato |
 | --- | --- |
@@ -93,16 +94,20 @@ Le fasi S1-S6 sono implementate. Lo stato finale della versione servita è
 | Servizio FastAPI e telemetria | ✅ S3 |
 | Candidata v2, probe HTTP e gate | ✅ S4, decisione SUPERATO |
 | Transizioni, drill e rollback | ✅ S5-S6, stato finale v1 |
-| Container / deployment esterno | ❌ non eseguito |
+| Container Docker locale | ✅ eseguito: immagine, Compose e smoke test |
+| Deployment esterno / registry / cloud | ❌ non eseguito |
 
 Risultati principali: accuracy v1 = v2 = 0.7350; precision classe 1 = 0.6742;
 recall classe 1 = 0.7143; p95 HTTP v2 = 28,3657 ms; error rate gate = 0/30.
 Drill: `200, 200, 200, 422`, error rate drill 1/4 = 0,25 (separato dal gate).
+Smoke test Docker: `200, 200, 200, 422`, v1 servita, 22 controlli su 22
+superati; il container è rimosso al termine.
 
 Mappa completa delle evidenze e istruzioni di ripetizione:
 [`docs/consegna_finale.md`](docs/consegna_finale.md). Dettaglio delle modifiche
-della fase finale: [`docs/consegna_s4_s5.md`](docs/consegna_s4_s5.md). Traccia
-per la presentazione: [`docs/presentazione.md`](docs/presentazione.md).
+della fase finale: [`docs/consegna_s4_s5.md`](docs/consegna_s4_s5.md). Deploy
+container, comandi ed evidenze: [`docs/deploy_docker.md`](docs/deploy_docker.md).
+Traccia per la presentazione: [`docs/presentazione.md`](docs/presentazione.md).
 
 ## Setup rapido
 
@@ -120,6 +125,11 @@ Per audit e test basta la libreria standard; per servizio e drill servono
 FastAPI, Uvicorn, NumPy, scikit-learn e joblib. MLflow serve solo per
 riallenare. Le versioni osservate e i limiti di compatibilità sono nella
 sezione [Ambiente](#ambiente) e in `requirements.txt`.
+
+Per il solo serving in container serve Docker con Compose v2; Docker non è una
+dipendenza Python e non è necessario per audit, test, training o drill. Le
+dipendenze dell'immagine sono pinnate in `requirements-serving.txt`, separate
+dal manifest senza pin del laboratorio.
 
 ---
 
@@ -181,6 +191,7 @@ config/
 docs/
   contratto_inferenza.md    # schema, ordine feature e payload
   obiettivo_metriche_gate.md
+  deploy_docker.md          # deploy container, comandi ed evidenze
 src/lab13/
   config.py                 # risoluzione percorsi, tracking URI e impostazioni
   contracts.py              # unica lista canonica + validatore payload + ordine classi
@@ -197,13 +208,19 @@ scripts/
   evaluate_gate.py          # decisione del gate S4
   switch_version.py         # attivazione/rollback offline (S5)
   drill_rollback.py         # drill HTTP v1 -> v2 -> v1 (S6)
+  docker_smoke_test.py      # build, avvio e verifica black-box del container
 tests/                      # test stdlib: contratti, dati, config, gate, training,
-                            # artefatti, servizio, stato versione e logica drill
+                            # artefatti, servizio, stato versione, drill e asset Docker
 models/                     # artefatti versionati: v1/ (S2) e v2/ (S3-S4)
-reports/                    # audit, valutazioni, probe, gate e drill
+reports/                    # audit, valutazioni, probe, gate, drill e deploy Docker
 reports/drill/              # log richieste, registro transizioni e log server del drill
+reports/docker/             # log e inspect del container, senza payload
 logs/                       # log runtime locale (ignorato da git)
 mlruns/                     # store MLflow locale (ignorato da git)
+Dockerfile                  # immagine di serving python:3.11.9-slim
+.dockerignore               # contesto di build minimo
+docker-compose.yml          # deploy locale: utente non-root, root read-only, healthcheck
+requirements-serving.txt    # pin delle sole dipendenze di serving (senza MLflow)
 requirements.txt            # manifest delle dipendenze previste, senza pin
 ```
 
@@ -307,6 +324,13 @@ del laboratorio sono annotate nei commenti del file e nei metadati degli
 artefatti (`python 3.11.9`, `numpy 2.4.6`, `scikit-learn 1.8.0`, `mlflow 3.16.1`,
 `joblib 1.5.3`). L'audit S1 usa solo la libreria standard; il training S2
 richiede NumPy, scikit-learn, joblib e MLflow.
+
+Per l'immagine Docker il manifest separato `requirements-serving.txt` fissa
+solo le dipendenze di serving: `numpy 2.4.6`, `scipy 1.17.1`,
+`scikit-learn 1.8.0`, `joblib 1.5.3`, `fastapi 0.115.6`, `pydantic 2.14.3` e
+`uvicorn 0.34.0`. MLflow e HTTPX non entrano nell'immagine: non servono a
+`/predict`. La separazione evita di dichiarare pinnato il manifest didattico e
+mantiene riproducibile il solo ambiente di serving.
 
 ## Limiti
 
@@ -624,7 +648,8 @@ python scripts/drill_rollback.py --base-url http://127.0.0.1:8000
 | --- | --- | --- |
 | In-process | ✅ eseguito | training, test, probe `pipeline.predict` |
 | HTTP locale | ✅ eseguito | probe HTTP v2 e drill v1 → v2 → v1 |
-| Container | ❌ non eseguito | nessun Docker o deployment esterno |
+| Container Docker locale | ✅ eseguito | immagine, Compose, healthcheck e smoke test v1 |
+| Deployment esterno / registry / cloud | ❌ non eseguito | nessuna infrastruttura esterna |
 
 ### Cleanup
 
@@ -638,7 +663,10 @@ python scripts/drill_rollback.py --base-url http://127.0.0.1:8000
   `Remove-Item Env:LAB13_REQUEST_LOG`.
 - Non eliminare `config/active_version.json`, `models/v1`, `models/v2`,
   `reports/` e `reports/drill/`: sono evidenze della consegna.
-- Non sono stati creati container da rimuovere.
+- Lo smoke test Docker rimuove container, rete e volume dei log al termine
+  (`docker compose down -v`), salvo `--keep-running`. Se lo stack è rimasto
+  attivo: `docker compose down -v`; per rimuovere anche l'immagine:
+  `docker image rm lab13-progetto3-api:local`.
 
 ### Ambiente
 
@@ -667,9 +695,134 @@ drill.
 - Il gate S4 conserva la decisione registrata con la baseline isolata. Lo hash
   canonico mostra che la v1 originale ha lo stesso contenuto e la stessa
   accuracy, ma il report del gate non è stato riscritto dopo i risultati.
-- L'API, il probe e il drill locali non costituiscono verifica di container o
-  deployment esterno: quel livello è dichiarato “non eseguito”.
+- Il livello container è verificato localmente con Docker (immagine, Compose,
+  healthcheck e smoke test). Non è un deployment cloud, non usa un registry
+  esterno e non introduce TLS, autenticazione o rate limiting.
 - v2 resta una candidata: il drill S5-S6 la attiva solo localmente per la prova
   di rollback e lascia lo stato finale su v1.
 - Il cambio versioni richiede `LAB13_ALLOW_VERSION_SWITCH=1` ed è pensato per
   un ambiente locale; non va esposto in produzione.
+
+---
+
+# Deploy su Docker - livello container
+
+## Stato
+
+Il livello **container** è implementato ed eseguito localmente con Docker
+Engine 29.6.1 e Docker Compose v5.2.0 su Linux/amd64. Il container serve la
+**v1** già versionata e lascia disabilitato `POST /admin/version`. Non è un
+deployment cloud e non usa un registry esterno. Dettaglio completo, comandi ed
+evidenze: [`docs/deploy_docker.md`](docs/deploy_docker.md).
+
+| Elemento | Scelta |
+| --- | --- |
+| Immagine | `lab13-progetto3-api:local` |
+| Base | `python:3.11.9-slim`, la stessa versione Python degli artefatti |
+| Dipendenze | pinnate in `requirements-serving.txt`; MLflow escluso |
+| Utente | `lab13`, uid/gid `10001` (non-root) |
+| Filesystem | root read-only; scrivibile solo il volume `/app/logs` |
+| Sicurezza | `cap_drop: ALL`, `no-new-privileges`, porta solo su `127.0.0.1` |
+| Healthcheck | `GET /health` ogni 30 s, `start_period` 20 s, 3 retry |
+| Versione | v1 da `config/active_version.json`; cambio versione disabilitato |
+
+L'immagine contiene `src/`, `config/`, `models/`, `dataset (1).csv` e
+`richieste_monitoraggio.csv`; il dataset serve al controllo del fingerprint
+canonico eseguito all'avvio. Il container non dipende dal filesystem dell'host
+per servire.
+
+## Comandi
+
+```powershell
+# Build e avvio del deploy locale
+docker compose build
+docker compose up -d
+docker compose ps
+Invoke-RestMethod http://127.0.0.1:8000/health
+
+# Verifica automatica: build, avvio, 4 richieste, metriche, log e cleanup
+python scripts/docker_smoke_test.py
+
+# Porta alternativa, senza modificare il file
+python scripts/docker_smoke_test.py --port 8001
+
+# Fermare e rimuovere container, rete e volume dei log
+docker compose down -v
+
+# Rimuovere l'immagine locale (facoltativo)
+docker image remove lab13-progetto3-api:local
+```
+
+`scripts/docker_smoke_test.py` esegue `docker compose down -v` al termine,
+salvo `--keep-running`. Senza Compose, la build e il run equivalenti sono in
+[`docs/deploy_docker.md`](docs/deploy_docker.md#build-e-avvio-senza-compose).
+
+## Esito misurato (2026-11-16)
+
+| Elemento | Valore |
+| --- | --- |
+| Esito | **SUPERATO**, 22 controlli su 22 |
+| Image ID | `sha256:f96becea9ac1621b72d3817db604bed27f5a4790c26fa3b00f77c1acdaff0684` |
+| Dimensione immagine | 581 MB su disco (`docker image ls`); 129,1 MiB compressa (`inspect .Size`) |
+| Container | `lab13-progetto3-api`, stato `running`, health `healthy` |
+| Utente / UID | `lab13` / `10001` |
+| Root filesystem | read-only |
+| Versione servita | `v1` |
+| Run ID | `64079619c2c947bd83699d0d552b9d78` |
+| Hash artefatto | `f8aea6264329d4c53d1f87e270c10ef7a3567c739c59c5796ccf116ccb7e1bd7` |
+| Fingerprint canonico dataset | `5c999d24a24126e81a033ae5ecf9b9b1049925f8abe59367883bcd171476c72f` |
+
+| # | Request ID | Versione richiesta dal CSV | Status atteso | Status reale | Predizione | Versione servita | Log correlato |
+| ---: | --- | --- | ---: | ---: | ---: | --- | --- |
+| 1 | `req_01` | v1 | 200 | 200 | 0 | v1 | sì |
+| 2 | `req_02` | v2 | 200 | 200 | 1 | v1 | sì |
+| 3 | `req_03` | v1 | 200 | 200 | 1 | v1 | sì |
+| 4 | `req_04` | v1 incompleta (29 feature) | 422 | 422 | - | - | sì |
+
+Metriche della finestra: 4 richieste `POST /predict`, 1 errore HTTP ≥ 400 (il
+422 atteso), error rate 0,25, p95 2,92 ms. `req_02` indica `v2` nel CSV perché
+lo stesso file serve al drill S5-S6; il deployment resta su v1. Il p95 e
+l'error rate dello smoke test **non** sostituiscono il gate S4 (p95 HTTP
+28,3657 ms, error rate 0/30).
+
+Versioni nel container: Python 3.11.9, NumPy 2.4.6, scikit-learn 1.8.0,
+joblib 1.5.3, FastAPI 0.115.6, Uvicorn 0.34.0, Pydantic 2.14.3. Le versioni
+numeriche coincidono con i metadati degli artefatti; il warning di versione
+diversa osservato nell'ambiente Python 3.12 del drill non compare.
+
+## Evidenze
+
+| Evidenza | Percorso |
+| --- | --- |
+| Esito strutturato | `reports/docker_deploy.json` |
+| Esito leggibile | `reports/docker_deploy.md` |
+| Log richieste del container (senza payload) | `reports/docker/requests.jsonl` |
+| Log stdout/stderr del container | `reports/docker/container.log` |
+| `docker inspect` del container | `reports/docker/container_inspect.json` |
+| `docker image inspect` | `reports/docker/image_inspect.json` |
+| Asset Docker | `Dockerfile`, `.dockerignore`, `docker-compose.yml`, `requirements-serving.txt` |
+| Test statici del livello Docker | `tests/test_docker_assets.py` |
+
+## Limiti del deploy Docker
+
+- Docker locale single-node: non è un deployment cloud, Kubernetes o con
+  registry esterno.
+- Nessun TLS, autenticazione o rate limiting; la porta è pubblicata solo su
+  `127.0.0.1`.
+- Lo smoke test non è un test di carico; il p95 su quattro richieste non
+  sostituisce il gate S4.
+- Il deployment serve la v1 e lascia `/admin/version` disabilitato; il drill
+  `v1 → v2 → v1` resta un'operazione locale S5-S6.
+- La validation assegnata non è un test indipendente e non simula una
+  validazione temporale.
+
+## Cleanup
+
+```powershell
+docker compose down -v
+docker image remove lab13-progetto3-api:local
+```
+
+Il comando `docker_smoke_test.py` esegue già il primo comando al termine, salvo
+`--keep-running`. Conservare `reports/docker_deploy.json`, `reports/docker_deploy.md`
+e `reports/docker/` come evidenza del livello container.

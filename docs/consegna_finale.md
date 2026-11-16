@@ -6,7 +6,8 @@ S1-S6 sono implementate. Il progetto ha dati e contratto, baseline v1 tracciata,
 servizio FastAPI osservabile, candidata v2 con gate misurato, transizioni di
 versione, drill v1 → v2 → v1 con rollback e ripristino della baseline. Lo stato
 finale della versione attiva è **v1**. Il dettaglio delle aggiunte e modifiche
-della fase finale è in `docs/consegna_s4_s5.md`.
+della fase finale è in `docs/consegna_s4_s5.md`. Il livello container è stato
+aggiunto successivamente ed è documentato in `docs/deploy_docker.md`.
 
 | Fase | Contenuto | Stato |
 | --- | --- | --- |
@@ -16,6 +17,8 @@ della fase finale è in `docs/consegna_s4_s5.md`.
 | S4 | Candidata v2, probe HTTP, gate | ✅ eseguito |
 | S5 | Stato attivo atomico, attivazione/rollback, registro transizioni | ✅ eseguito |
 | S6 | Drill HTTP, prova del ripristino, documentazione | ✅ eseguito |
+| Container | Immagine Docker, Compose, healthcheck, smoke test v1 | ✅ eseguito localmente |
+| Deployment esterno | Registry, cloud, orchestratore | ❌ non eseguito |
 
 ## Versioni, run e artefatti
 
@@ -56,6 +59,32 @@ da `config/gate.json` e non modificate dopo i risultati. Il report completo è i
 Il drill ha risposto `200, 200, 200, 422` nell'ordine `v1, v2, v1, v1`. Il 422 di
 `req_04` deriva dal contratto di validazione (29 feature), non da una risposta
 simulata. Il valore 0,25 del drill non sostituisce l'error rate del gate.
+
+## Deploy Docker
+
+Il livello container è stato eseguito localmente con Docker Engine 29.6.1 e
+Docker Compose v5.2.0. L'immagine `lab13-progetto3-api:local` usa
+`python:3.11.9-slim`, dipendenze pinnate in `requirements-serving.txt`, utente
+non-root `lab13` (uid 10001), root filesystem read-only, `cap_drop: ALL`,
+`no-new-privileges` e healthcheck su `/health`. Il container serve la v1 e
+lascia `/admin/version` disabilitato.
+
+| Controllo | Esito |
+| --- | --- |
+| Build e avvio Compose | ✅ immagine 581 MB su disco (129,1 MiB compressa), container `running` |
+| Healthcheck Docker | ✅ `healthy` |
+| Identità servita | ✅ v1, run ID e hash artefatto di `models/v1` |
+| Fingerprint canonico dataset | ✅ `5c999d24a24126e81a033ae5ecf9b9b1049925f8abe59367883bcd171476c72f` |
+| Sequenza richieste | ✅ `200, 200, 200, 422`, predizioni 0, 1, 1 |
+| Metriche | 4 richieste, 1 errore atteso, error rate 0,25, p95 2,92 ms |
+| Log richieste | ✅ 4 correlazioni, nessun payload |
+| Sicurezza | ✅ uid 10001, root read-only, capabilities rimosse |
+| Controlli complessivi | ✅ 22 su 22 |
+
+`req_02` indica v2 nel CSV perché lo stesso file serve al drill S5-S6: nel
+deployment resta servita dalla v1. Il p95 e l'error rate dello smoke test non
+sostituiscono il gate S4. Dettagli e comandi: `docs/deploy_docker.md`; evidenze:
+`reports/docker_deploy.json`, `reports/docker_deploy.md`, `reports/docker/`.
 
 ## Stato finale e prova del ripristino
 
@@ -100,6 +129,9 @@ Per ricostruire una singola risposta fino a versione, run e dataset:
 | Log server del drill | `reports/drill/server.log` |
 | Stato attivo finale | `config/active_version.json` |
 | Coerenza fingerprint | `reports/fingerprint_coerenza.md` |
+| Deploy Docker | `reports/docker_deploy.json`, `reports/docker_deploy.md` |
+| Log e inspect del container | `reports/docker/` |
+| Istruzioni del livello container | `docs/deploy_docker.md` |
 | Dettaglio modifiche S4 → S5-S6 | `docs/consegna_s4_s5.md` |
 | Traccia presentazione | `docs/presentazione.md` |
 
@@ -136,11 +168,17 @@ python scripts/drill_rollback.py
 
 # 6. Verifica stato finale
 python scripts/switch_version.py status
+
+# 7. Deploy Docker e verifica black-box (richiede Docker con Compose)
+docker compose build
+python scripts/docker_smoke_test.py
 ```
 
 Il drill automatico avvia uvicorn su `127.0.0.1:8000`, imposta
 `LAB13_ALLOW_VERSION_SWITCH=1`, scrive il log in `reports/drill/requests.jsonl`
 e arresta il server al termine. Se la porta è occupata, usare `--port`.
+Lo smoke test Docker esegue build, avvio, quattro richieste, controlli di
+identità/sicurezza/log e cleanup; con `--keep-running` lascia lo stack attivo.
 
 ## Livelli eseguiti e non eseguiti
 
@@ -148,7 +186,8 @@ e arresta il server al termine. Se la porta è occupata, usare `--port`.
 | --- | --- |
 | In-process (training, test, probe `predict`) | ✅ eseguito |
 | HTTP locale (probe HTTP, drill, health, metrics) | ✅ eseguito |
-| Container / deployment esterno | ❌ non eseguito |
+| Container Docker locale (immagine, Compose, smoke test) | ✅ eseguito |
+| Deployment esterno / registry / cloud | ❌ non eseguito |
 
 ## Cleanup
 
@@ -159,8 +198,9 @@ e arresta il server al termine. Se la porta è occupata, usare `--port`.
   `LAB13_TRANSITIONS_PATH`, `LAB13_REQUEST_LOG`.
 - Non eliminare `models/`, `reports/`, `config/active_version.json`: sono
   artefatti ed evidenze della consegna.
-- Nessun container è stato creato, quindi non c'è nulla da rimuovere a quel
-  livello.
+- Container Docker: `docker compose down -v` rimuove container, rete e volume
+  dei log; `docker image remove lab13-progetto3-api:local` rimuove l'immagine.
+  Lo smoke test esegue già il primo comando, salvo `--keep-running`.
 
 ## Limiti
 
@@ -171,7 +211,13 @@ e arresta il server al termine. Se la porta è occupata, usare `--port`.
 - Il gate è misurato su una baseline isolata; la v1 originale ha contenuto e
   accuracy equivalenti, ma il report S4 non è stato riscritto.
 - Il drill è locale e abilitato da una variabile d'ambiente: non è un deployment
-  di produzione né una verifica di container.
+  di produzione.
+- Il container è verificato localmente (Docker single-node), non su cloud,
+  Kubernetes o registry esterno; non introduce TLS, autenticazione o rate
+  limiting.
+- Lo smoke test Docker non è un test di carico e il suo p95 su quattro richieste
+  non sostituisce il gate S4.
 - Gli artefatti sono stati serializzati con versioni di scikit-learn diverse da
   quelle del drill; il caricamento emette un warning, ma le predizioni
-  riprodotte coincidono con quelle salvate.
+  riprodotte coincidono con quelle salvate. Nel container le versioni numeriche
+  coincidono con i metadati e il warning non compare.
